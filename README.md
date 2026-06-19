@@ -1,16 +1,16 @@
 # 🐼 Panda HSK — Chinese Vocabulary Trainer
 
-A friendly, single-file web app for learning **HSK 1–5** Chinese vocabulary (3600 words) with
+A friendly, single-file web app for learning **HSK 1–6** Chinese vocabulary (6100 words) with
 swipeable flashcards, spaced-repetition memory tracking, quizzes, and meanings in
 **English, Thai, and Japanese**. Switch between built-in **courses** — the HSK 1–3 list or your own
 **class-lesson vocabulary** — right inside the app. Meet **Bao**, your panda study buddy, who *grows up* as you learn.
 
-![level](https://img.shields.io/badge/HSK-1--5-4c9a4f) ![words](https://img.shields.io/badge/words-3600-2f6b33) ![langs](https://img.shields.io/badge/meanings-EN%20%C2%B7%20TH%20%C2%B7%20JA-3f7cc4) ![license](https://img.shields.io/badge/license-MIT-e7a83b)
+![level](https://img.shields.io/badge/HSK-1--6-4c9a4f) ![words](https://img.shields.io/badge/words-6100-2f6b33) ![langs](https://img.shields.io/badge/meanings-EN%20%C2%B7%20TH%20%C2%B7%20JA-3f7cc4) ![license](https://img.shields.io/badge/license-MIT-e7a83b)
 
 ## ✨ Features
 
 - **Switchable courses (in-app)** — a **Course** selector lets you choose which vocabulary database is
-  active: **HSK 1–5** (3600 words) or **Class lessons** (organised by lesson, with example sentences).
+  active: **HSK 1–6** (6100 words) or **Class lessons** (organised by lesson, with example sentences).
   Each course keeps its own memory progress, and the structure is built to add more courses later.
 
 - **Compact level menu** — levels are now chosen from a single **dropdown menu** (showing the current
