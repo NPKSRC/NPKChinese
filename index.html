@@ -478,7 +478,6 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
       </div>
     </div>
 
-    <div class="rate-hint" id="rateHint">Swipe ← / → to move · tap to flip</div>
     <div class="rate" id="rateRow" style="display:none">
       <button class="r-again" data-rate="again">Again<small>&lt; 1 min</small></button>
       <button class="r-hard" data-rate="hard">Hard<small>review soon</small></button>
@@ -488,7 +487,6 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
 
     <div class="controls">
       <button class="btn btn-round btn-ghost" id="prevBtn" aria-label="Previous card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <button class="btn btn-primary" id="flipBtn">Flip card</button>
       <button class="btn btn-round btn-ghost" id="nextBtn" aria-label="Next card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
     </div>
     <div class="controls">
@@ -1064,17 +1062,15 @@ function renderCard(){
   var hard=c&&c.hard;
   function hanCls(s){return s.length>6?" tiny":(s.length>3?" small":"");}
   var fHTML='<span class="tag">'+(front==="en"?"Meaning":front==="pin"?"Pinyin":"Hanzi")+'</span>'
-    +'<span class="leveltag">'+levelTag(w)+'</span>'
     +'<span class="statustag st-'+st+'">'+stl+'</span>';
   if(front==="han"){fHTML+='<div class="han'+hanCls(w.h)+'">'+w.h+'</div>';}
   else if(front==="pin"){fHTML+='<div class="han'+(w.p.length>8?" tiny":" small")+'">'+w.p+'</div><div class="sub">'+w.h+'</div>';}
   else{fHTML+='<div class="en-first">'+meaningLines(w)[0].t+'</div>';}
   fHTML+='<button class="hardstar'+(hard?" on":"")+'" id="hardStar" title="Mark for review" aria-label="Mark for review">★</button>';
   fHTML+='<button class="spk spk-front" id="cardSpkFront" title="Hear pronunciation" aria-label="Hear pronunciation">'+SPK_SVG+'</button>';
-  fHTML+='<span class="hint">tap to flip</span>';
   $("#cardFront").innerHTML=fHTML;
 
-  var mHTML='<span class="tag">Answer</span><span class="leveltag">'+levelTag(w)+'</span><span class="statustag st-'+st+'">'+stl+'</span>'
+  var mHTML='<span class="tag">Answer</span><span class="statustag st-'+st+'">'+stl+'</span>'
     +'<div class="han'+(w.h.length>6?" tiny":"")+'">'+w.h+'</div><div class="pin">'+w.p+'</div>'
     +(w.pos?'<div class="pos">'+w.pos+'</div>':'')+'<div class="meanings">';
   meaningLines(w).forEach(function(m){
@@ -1089,9 +1085,7 @@ function renderCard(){
   $("#cardBack").innerHTML=mHTML;
 
   var card=$("#card");card.classList.toggle("flipped",study.flipped);
-  $("#flipBtn").textContent=study.flipped?"Got the meaning":"Flip card";
   $("#rateRow").style.display=study.flipped?"grid":"none";
-  $("#rateHint").style.display=study.flipped?"none":"block";
   $("#studyCounter").textContent=(study.idx+1)+" / "+study.pool.length;
   $("#studyBar").style.width=((study.idx+1)/study.pool.length*100)+"%";
   $("#prevBtn").disabled=study.idx===0;
@@ -1218,7 +1212,7 @@ function buildQuiz(){
     var others=sample(distractorPool.filter(function(x){return x.id!==w.id;}),3);
     return {w:w,mode:mode,others:others};
   });
-  quiz.i=0;quiz.score=0;quiz.missed=[];quiz.locked=false;
+  quiz.i=0;quiz.score=0;quiz.missed=[];quiz.locked=false;quiz.xpStart=acct().xp;
 }
 function startQuiz(){
   buildQuiz();
@@ -1295,7 +1289,7 @@ function endQuiz(){
   $("#quizPlay").style.display="none";$("#quizDone").style.display="block";
   var pct=Math.round(quiz.score/quiz.qs.length*100);
   $("#finalScore").textContent=quiz.score;$("#finalTotal").textContent=quiz.qs.length;
-  var earned=quiz.score*10+(quiz.qs.length-quiz.score)*2;
+  var earned=Math.max(0,acct().xp-(typeof quiz.xpStart==="number"?quiz.xpStart:acct().xp));
   $("#xpEarned").textContent="+"+earned+" XP earned";
   var title,sub,stage=stageFromGP(growthPoints(acct()).gp);
   if(pct>=90){title="Outstanding! 🏆";sub=(buddyName(acct().emoji)==="Bao"?"Bao":"Your "+buddyName(acct().emoji))+" is so proud of you.";setMood("happy");}
@@ -1677,7 +1671,6 @@ function init(){
   // language toggles (sync across any bars)
   $$(".lang-toggle").forEach(function(b){b.onclick=function(){var k=b.getAttribute("data-lang");var L=langs();L[k]=!L[k];if(!L.en&&!L.th&&!L.ja)L.en=true;saveDB();syncLangButtons();renderCard();renderBrowse();};});
   // study controls
-  $("#flipBtn").onclick=flipCard;
   $("#prevBtn").onclick=function(){prevCard(false);};
   $("#nextBtn").onclick=function(){nextCard(false);};
   $("#shuffleBtn").onclick=function(){study.pool=shuffle(currentLevelWords());study.idx=0;study.flipped=false;renderCard();toast("Shuffled 🔀");};
