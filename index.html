@@ -88,27 +88,9 @@ body{
 .lang-toggle[data-lang="ja"][aria-pressed="true"]{background:var(--seal)}
 .lang-toggle[aria-pressed="true"] .dot{background:rgba(255,255,255,.9)}
 
-/* ---------- Panda stage ---------- */
+/* ---------- Mascot stage ---------- */
 .stage{display:flex;justify-content:center;margin:0 0 4px;min-height:128px;align-items:flex-end}
-.panda{display:block;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
-.panda .blink{transform-origin:center;animation:blink 5.5s infinite}
-@keyframes blink{0%,96%,100%{transform:scaleY(1)}98%{transform:scaleY(.1)}}
-.panda .arm-r{transform-origin:74% 60%}
-[data-mood="happy"] .panda{transform:translateY(-5px) rotate(-2deg)}
-[data-mood="happy"] .panda .arm-r{animation:wave .6s ease-in-out 2}
-[data-mood="sad"] .panda{transform:translateY(2px)}
-[data-mood="think"] .panda{transform:rotate(2deg)}
-@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-24deg)}}
-.panda .mouth-happy,.panda .mouth-sad,.panda .mouth-idle{display:none}
-[data-mood="idle"] .panda .mouth-idle{display:block}
-[data-mood="happy"] .panda .mouth-happy{display:block}
-[data-mood="sad"] .panda .mouth-sad{display:block}
-[data-mood="think"] .panda .mouth-idle{display:block}
-.panda .pupil{transition:transform .25s ease}
-[data-mood="think"] .panda .pupil{transform:translate(2px,-2.5px)}
-.panda .acc{opacity:0}
-.panda.s2 .acc-leaf,.panda.s3 .acc-scarf,.panda.s4 .acc-glasses,.panda.s5 .acc-cap,.panda.s6 .acc-sage,.panda.s6 .acc-aura{opacity:1}
-.panda.s3 .acc-leaf,.panda.s4 .acc-leaf,.panda.s5 .acc-leaf,.panda.s6 .acc-leaf{opacity:1}
+.mascot{display:block}
 .speech{text-align:center;font-family:var(--display);font-weight:700;color:var(--ink-soft);min-height:1.4em;margin:2px 0 12px;font-size:1rem}
 
 /* ---------- Flashcard ---------- */
@@ -335,7 +317,7 @@ body{
   .acct-chip .who{max-width:64px}.acct-chip .who b{max-width:64px}
   .statgrid{grid-template-columns:1fr 1fr}
   #view-study .stage,#view-quiz .stage{min-height:96px}
-  #pandaStudy .panda,#pandaQuiz .panda{height:78px!important;width:auto!important}
+  #pandaStudy .mascot,#pandaQuiz .mascot{height:78px!important;width:auto!important}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;transition-duration:.06ms!important}
@@ -428,7 +410,7 @@ body{
     <div id="quizSetup">
       <div class="quiz-setup">
         <h2>Check your knowledge</h2>
-        <p class="sub">Pick a quiz and Bao will test what you've learned.</p>
+        <p class="sub">Pick a quiz to test what you've learned.</p>
         <div class="setup-group">
           <label>Quiz type</label>
           <div class="seg" id="qType">
@@ -516,8 +498,8 @@ body{
   <section class="view" id="view-progress">
     <div class="bao-hero">
       <div class="stage" style="min-height:140px"><div id="pandaBig"></div></div>
-      <div class="stagename" id="stageName">Panda Cub</div>
-      <div class="stagecap" id="stageCap">Just hatched into the world of Chinese!</div>
+      <div class="stagename" id="stageName">Cub</div>
+      <div class="stagecap" id="stageCap">Just starting the adventure into Chinese!</div>
       <div class="bao-grow">
         <div class="gbar"><i id="growBar" style="width:0"></i></div>
         <div class="glabel"><span id="growNow">0 growth</span><span id="growNext">Next: 20</span></div>
@@ -569,14 +551,14 @@ body{
 <!-- Account modal -->
 <div class="modal-back" id="acctModal">
   <div class="modal" role="dialog" aria-modal="true" aria-label="Accounts">
-    <h2>Your panda profiles</h2>
+    <h2>Your buddy profiles</h2>
     <p class="msub">Each profile keeps its own XP, streak and memory progress on this device.</p>
     <div class="acct-list" id="acctList"></div>
     <button class="btn btn-ghost" id="newAcctBtn" style="width:100%;margin-bottom:8px">+ New profile</button>
 
     <div id="acctForm" style="display:none">
       <div class="field"><label>Name</label><input id="formName" maxlength="18" placeholder="e.g. Aroon"></div>
-      <div class="field"><label>Pick a panda buddy</label><div class="emoji-pick" id="emojiPick"></div></div>
+      <div class="field"><label>Pick a buddy</label><div class="emoji-pick" id="emojiPick"></div></div>
       <div class="modal-actions">
         <button class="btn btn-ghost" id="cancelAcctBtn" style="flex:1">Cancel</button>
         <button class="btn btn-primary" id="saveAcctBtn">Save profile</button>
@@ -670,48 +652,152 @@ function sample(arr,n){return shuffle(arr).slice(0,n);}
 function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
 
 /* ---- Panda SVG (parametric growth + mood) ---- */
-function pandaSVG(stage,size){
-  stage=clamp(stage||1,1,6);
-  var scale=0.82+stage*0.06;
-  var w=Math.round((size||118)*scale*0.75);
-  var cls="panda";
-  for(var i=2;i<=stage;i++) cls+=" s"+i;
-  return ''
-  +'<svg class="'+cls+'" viewBox="0 0 120 132" width="'+w+'" height="'+Math.round(w*1.1)+'" role="img" aria-label="Bao the panda, stage '+stage+'">'
-  +'<circle class="acc acc-aura" cx="60" cy="62" r="62" fill="#d99a3a" opacity="0"><animate attributeName="opacity" values="0.18;0.32;0.18" dur="3s" repeatCount="indefinite"/></circle>'
-  +'<ellipse cx="60" cy="106" rx="30" ry="24" fill="#fff" stroke="#e3ece0" stroke-width="1.5"/>'
-  +'<ellipse class="arm arm-l" cx="32" cy="101" rx="11" ry="13.5" fill="#20211e"/>'
-  +'<ellipse class="arm arm-r" cx="88" cy="101" rx="11" ry="13.5" fill="#20211e"/>'
-  +'<path class="acc acc-scarf" d="M34 92 Q60 104 86 92 L84 100 Q60 110 36 100 Z" fill="#d9594c"/>'
-  +'<rect class="acc acc-scarf" x="52" y="98" width="9" height="20" rx="3" fill="#d9594c" transform="rotate(8 56 108)"/>'
-  +'<circle cx="27" cy="29" r="13" fill="#20211e"/><circle cx="93" cy="29" r="13" fill="#20211e"/>'
-  +'<ellipse cx="60" cy="52" rx="41" ry="37" fill="#fff" stroke="#e3ece0" stroke-width="1.5"/>'
-  +'<ellipse cx="43" cy="50" rx="11" ry="14" fill="#20211e" transform="rotate(-13 43 50)"/>'
-  +'<ellipse cx="77" cy="50" rx="11" ry="14" fill="#20211e" transform="rotate(13 77 50)"/>'
-  +'<g class="blink">'
-  +'<circle cx="44" cy="50" r="6" fill="#fff"/><circle cx="76" cy="50" r="6" fill="#fff"/>'
-  +'<circle class="pupil" cx="45" cy="51" r="3.1" fill="#20211e"/><circle class="pupil" cx="75" cy="51" r="3.1" fill="#20211e"/>'
-  +'<circle cx="46.4" cy="49.4" r="1.1" fill="#fff"/><circle cx="76.4" cy="49.4" r="1.1" fill="#fff"/>'
-  +'</g>'
-  +'<ellipse cx="60" cy="63" rx="5" ry="3.7" fill="#20211e"/>'
-  +'<path class="mouth-idle" d="M60 66 Q60 71 55 71 M60 66 Q60 71 65 71" stroke="#20211e" stroke-width="2" fill="none" stroke-linecap="round"/>'
-  +'<path class="mouth-happy" d="M51 67 Q60 76 69 67" stroke="#20211e" stroke-width="2.3" fill="none" stroke-linecap="round"/>'
-  +'<path class="mouth-sad" d="M52 73 Q60 67 68 73" stroke="#20211e" stroke-width="2.3" fill="none" stroke-linecap="round"/>'
-  +'<g class="acc acc-leaf"><path d="M95 18 Q108 10 112 22 Q104 30 95 26 Z" fill="#3f9d6e"/><path d="M97 24 L110 18" stroke="#155e52" stroke-width="1.2" fill="none"/></g>'
-  +'<g class="acc acc-glasses" fill="none" stroke="#3a3a3a" stroke-width="2.4"><circle cx="44" cy="50" r="11"/><circle cx="76" cy="50" r="11"/><path d="M55 50 H65"/><path d="M33 48 L24 45 M87 48 L96 45"/></g>'
-  +'<g class="acc acc-cap"><path d="M60 6 L96 18 L60 30 L24 18 Z" fill="#155e52"/><rect x="44" y="22" width="32" height="9" rx="2" fill="#155e52"/><circle cx="96" cy="18" r="2.6" fill="#d99a3a"/><path d="M96 18 V32" stroke="#d99a3a" stroke-width="1.8"/><path d="M96 32 l-3 5 h6 z" fill="#d99a3a"/></g>'
-  +'<g class="acc acc-sage"><path d="M50 70 Q60 92 70 70 Q60 80 50 70 Z" fill="#fff" stroke="#e3ece0" stroke-width="1"/><ellipse cx="60" cy="16" rx="7" ry="6" fill="#fff" stroke="#e3ece0" stroke-width="1.2"/></g>'
-  +'</svg>';
+/* ---------- Mascot system (10 buddies, 6 static growth stages) ---------- */
+function mEyes(lx,rx,y){
+  return '<circle cx="'+lx+'" cy="'+y+'" r="4.4" fill="#23211e"/><circle cx="'+rx+'" cy="'+y+'" r="4.4" fill="#23211e"/>'
+       + '<circle cx="'+(lx+1.5)+'" cy="'+(y-1.6)+'" r="1.4" fill="#fff"/><circle cx="'+(rx+1.5)+'" cy="'+(y-1.6)+'" r="1.4" fill="#fff"/>';
 }
+function mSmile(){return '<path d="M53 64 Q60 70 67 64" stroke="#3a2a20" stroke-width="2.2" fill="none" stroke-linecap="round"/>';}
+
+/* per-buddy head/colour spec; head drawn over a shared body */
+var MASCOTS={
+  "🐼":{label:"Bao the panda",name:"Bao",body:"#fff",belly:"#f3f7f3",arm:"#23211e",stroke:"#e3ece0",glow:"#d99a3a",
+    head:'<circle cx="27" cy="27" r="13" fill="#23211e"/><circle cx="93" cy="27" r="13" fill="#23211e"/>'
+      +'<ellipse cx="60" cy="50" rx="40" ry="36" fill="#fff" stroke="#e3ece0" stroke-width="1.5"/>'
+      +'<ellipse cx="46" cy="48" rx="10" ry="13" fill="#23211e" transform="rotate(-13 46 48)"/>'
+      +'<ellipse cx="74" cy="48" rx="10" ry="13" fill="#23211e" transform="rotate(13 74 48)"/>'
+      +'<circle cx="47" cy="49" r="5" fill="#fff"/><circle cx="73" cy="49" r="5" fill="#fff"/>'
+      +'<circle cx="47.6" cy="50" r="2.8" fill="#23211e"/><circle cx="72.4" cy="50" r="2.8" fill="#23211e"/>'
+      +'<circle cx="48.6" cy="49" r="1" fill="#fff"/><circle cx="73.6" cy="49" r="1" fill="#fff"/>'
+      +'<ellipse cx="60" cy="60" rx="4.6" ry="3.4" fill="#23211e"/>'+mSmile()},
+
+  "🐯":{label:"the tiger",name:"tiger",body:"#f0a23e",belly:"#fbe9c6",arm:"#f0a23e",stroke:"#d98a2e",glow:"#e8973a",
+    head:'<circle cx="30" cy="24" r="11" fill="#f0a23e"/><circle cx="90" cy="24" r="11" fill="#f0a23e"/>'
+      +'<circle cx="30" cy="25" r="5.5" fill="#e87a5a"/><circle cx="90" cy="25" r="5.5" fill="#e87a5a"/>'
+      +'<ellipse cx="60" cy="50" rx="40" ry="36" fill="#f0a23e" stroke="#d98a2e" stroke-width="1.5"/>'
+      +'<ellipse cx="60" cy="58" rx="20" ry="16" fill="#fff"/>'
+      +'<path d="M60 16 L60 30" stroke="#3a2a18" stroke-width="3" stroke-linecap="round"/>'
+      +'<path d="M47 18 Q45 26 49 32 M73 18 Q75 26 71 32" stroke="#3a2a18" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+      +'<path d="M22 46 L34 50 M21 56 L33 57 M98 46 L86 50 M99 56 L87 57" stroke="#3a2a18" stroke-width="2.4" stroke-linecap="round"/>'
+      +mEyes(48,72,48)
+      +'<path d="M55 56 H65 L60 61 Z" fill="#c9584a"/>'
+      +'<path d="M60 61 V63 M53 66 Q60 71 67 66" stroke="#3a2a20" stroke-width="2.1" fill="none" stroke-linecap="round"/>'},
+
+  "🐰":{label:"the rabbit",name:"rabbit",body:"#f7f3f4",belly:"#fff",arm:"#f1ebec",stroke:"#e4dde0",glow:"#e89bb0",
+    head:'<ellipse cx="49" cy="16" rx="7" ry="19" fill="#f7f3f4" stroke="#e4dde0" stroke-width="1.3"/>'
+      +'<ellipse cx="71" cy="16" rx="7" ry="19" fill="#f7f3f4" stroke="#e4dde0" stroke-width="1.3"/>'
+      +'<ellipse cx="49" cy="18" rx="3" ry="13" fill="#f4b8c4"/><ellipse cx="71" cy="18" rx="3" ry="13" fill="#f4b8c4"/>'
+      +'<ellipse cx="60" cy="52" rx="38" ry="34" fill="#f7f3f4" stroke="#e4dde0" stroke-width="1.5"/>'
+      +'<circle cx="42" cy="58" r="4.2" fill="#f6c3cb" opacity=".8"/><circle cx="78" cy="58" r="4.2" fill="#f6c3cb" opacity=".8"/>'
+      +mEyes(49,71,50)
+      +'<path d="M57 58 H63 L60 62 Z" fill="#f4869a"/>'
+      +'<path d="M60 62 V65 M54 65 Q57 68 60 65 Q63 68 66 65" stroke="#3a2a20" stroke-width="2" fill="none" stroke-linecap="round"/>'},
+
+  "🦊":{label:"the fox",name:"fox",body:"#ec8a3d",belly:"#fff",arm:"#ec8a3d",stroke:"#d4762e",glow:"#e8853a",
+    head:'<path d="M28 38 L23 8 L47 27 Z" fill="#ec8a3d"/><path d="M92 38 L97 8 L73 27 Z" fill="#ec8a3d"/>'
+      +'<path d="M31 32 L28 15 L41 26 Z" fill="#3a2a18"/><path d="M89 32 L92 15 L79 26 Z" fill="#3a2a18"/>'
+      +'<ellipse cx="60" cy="48" rx="38" ry="33" fill="#ec8a3d" stroke="#d4762e" stroke-width="1.5"/>'
+      +'<path d="M60 42 Q42 56 47 76 Q60 84 73 76 Q78 56 60 42 Z" fill="#fff"/>'
+      +mEyes(48,72,46)
+      +'<ellipse cx="60" cy="62" rx="4" ry="3" fill="#2a2a2a"/>'
+      +'<path d="M55 67 Q60 71 65 67" stroke="#3a2a20" stroke-width="2.1" fill="none" stroke-linecap="round"/>'},
+
+  "🐨":{label:"the koala",name:"koala",body:"#b9bcc2",belly:"#eef0f2",arm:"#b9bcc2",stroke:"#a4a8af",glow:"#9aa3b0",
+    head:'<circle cx="26" cy="40" r="16" fill="#b9bcc2"/><circle cx="94" cy="40" r="16" fill="#b9bcc2"/>'
+      +'<circle cx="26" cy="40" r="9" fill="#d9dde2"/><circle cx="94" cy="40" r="9" fill="#d9dde2"/>'
+      +'<ellipse cx="60" cy="52" rx="36" ry="33" fill="#b9bcc2" stroke="#a4a8af" stroke-width="1.5"/>'
+      +mEyes(47,73,50)
+      +'<ellipse cx="60" cy="64" rx="9" ry="11" fill="#3a3a3a"/>'
+      +'<ellipse cx="57" cy="60" rx="2.4" ry="3" fill="#5a5a5a"/>'},
+
+  "🐹":{label:"the hamster",name:"hamster",body:"#ecca9e",belly:"#fbf3e6",arm:"#ecca9e",stroke:"#d9b486",glow:"#e8b87a",
+    head:'<circle cx="40" cy="22" r="8" fill="#ecca9e"/><circle cx="80" cy="22" r="8" fill="#ecca9e"/>'
+      +'<circle cx="40" cy="22" r="4" fill="#f3c9b6"/><circle cx="80" cy="22" r="4" fill="#f3c9b6"/>'
+      +'<ellipse cx="60" cy="52" rx="39" ry="34" fill="#ecca9e" stroke="#d9b486" stroke-width="1.5"/>'
+      +'<ellipse cx="60" cy="60" rx="22" ry="15" fill="#fbf3e6"/>'
+      +'<circle cx="40" cy="60" r="7" fill="#f4a39a" opacity=".7"/><circle cx="80" cy="60" r="7" fill="#f4a39a" opacity=".7"/>'
+      +mEyes(48,72,49)
+      +'<ellipse cx="60" cy="57" rx="3" ry="2.4" fill="#c9756a"/>'
+      +'<rect x="57" y="62" width="6" height="5" rx="1.4" fill="#fff" stroke="#e0d3bf" stroke-width=".8"/>'},
+
+  "🐧":{label:"the penguin",name:"penguin",body:"#2d323b",belly:"#fff",arm:"#2d323b",stroke:"#222831",glow:"#f0a93a",
+    head:'<ellipse cx="60" cy="50" rx="38" ry="35" fill="#2d323b" stroke="#222831" stroke-width="1.5"/>'
+      +'<ellipse cx="60" cy="56" rx="26" ry="27" fill="#fff"/>'
+      +mEyes(50,70,46)
+      +'<path d="M53 58 Q60 53 67 58 Q60 66 53 58 Z" fill="#f0a93a"/>'
+      +'<path d="M53 58 H67" stroke="#d98e25" stroke-width="1"/>'},
+
+  "🦁":{label:"the lion",name:"lion",body:"#eab063",belly:"#f7e8cd",arm:"#eab063",stroke:"#d99440",glow:"#e8a23a",
+    head:'<g fill="#c9772e"><circle cx="60" cy="11" r="9"/><circle cx="40" cy="15" r="9"/><circle cx="80" cy="15" r="9"/>'
+      +'<circle cx="24" cy="31" r="9"/><circle cx="96" cy="31" r="9"/><circle cx="18" cy="51" r="9"/><circle cx="102" cy="51" r="9"/>'
+      +'<circle cx="24" cy="71" r="9"/><circle cx="96" cy="71" r="9"/><circle cx="40" cy="85" r="9"/><circle cx="80" cy="85" r="9"/></g>'
+      +'<circle cx="36" cy="26" r="7" fill="#eab063"/><circle cx="84" cy="26" r="7" fill="#eab063"/>'
+      +'<ellipse cx="60" cy="50" rx="34" ry="32" fill="#eab063" stroke="#d99440" stroke-width="1.5"/>'
+      +'<ellipse cx="60" cy="60" rx="18" ry="13" fill="#f7e0bd"/>'
+      +mEyes(49,71,48)
+      +'<path d="M55 56 H65 L60 61 Z" fill="#7a4a2a"/>'
+      +'<path d="M60 61 V64 M53 65 Q60 70 67 65" stroke="#5a3a20" stroke-width="2.1" fill="none" stroke-linecap="round"/>'},
+
+  "🐲":{label:"the dragon",name:"dragon",body:"#5fb878",belly:"#cdebd5",arm:"#5fb878",stroke:"#46985f",glow:"#d9b24a",
+    head:'<path d="M40 22 L34 6 L46 18 Z" fill="#f0d28a"/><path d="M80 22 L86 6 L74 18 Z" fill="#f0d28a"/>'
+      +'<path d="M26 40 L13 33 L24 48 Z" fill="#4ea36a"/><path d="M94 40 L107 33 L96 48 Z" fill="#4ea36a"/>'
+      +'<path d="M55 17 L60 8 L65 17 Z" fill="#f0d28a"/>'
+      +'<ellipse cx="60" cy="50" rx="38" ry="34" fill="#5fb878" stroke="#46985f" stroke-width="1.5"/>'
+      +'<ellipse cx="60" cy="60" rx="20" ry="14" fill="#88c99a"/>'
+      +'<ellipse cx="54" cy="58" rx="1.8" ry="2.4" fill="#3a6b48"/><ellipse cx="66" cy="58" rx="1.8" ry="2.4" fill="#3a6b48"/>'
+      +mEyes(49,71,47)
+      +'<path d="M52 64 Q60 70 68 64" stroke="#3a6b48" stroke-width="2.1" fill="none" stroke-linecap="round"/>'},
+
+  "🐵":{label:"the monkey",name:"monkey",body:"#a9763f",belly:"#ecd2ab",arm:"#a9763f",stroke:"#8f6132",glow:"#c98f4a",
+    head:'<circle cx="22" cy="50" r="13" fill="#a9763f"/><circle cx="98" cy="50" r="13" fill="#a9763f"/>'
+      +'<circle cx="22" cy="50" r="7" fill="#e3c39a"/><circle cx="98" cy="50" r="7" fill="#e3c39a"/>'
+      +'<ellipse cx="60" cy="50" rx="37" ry="34" fill="#a9763f" stroke="#8f6132" stroke-width="1.5"/>'
+      +'<path d="M60 26 Q34 30 36 56 Q40 80 60 84 Q80 80 84 56 Q86 30 60 26 Z" fill="#ecd2ab"/>'
+      +'<path d="M44 41 Q50 37 56 41 M64 41 Q70 37 76 41" stroke="#8f6132" stroke-width="2" fill="none" stroke-linecap="round"/>'
+      +mEyes(50,70,48)
+      +'<ellipse cx="56" cy="60" rx="2" ry="2.6" fill="#6b4a2a"/><ellipse cx="64" cy="60" rx="2" ry="2.6" fill="#6b4a2a"/>'
+      +'<path d="M52 66 Q60 72 68 66" stroke="#6b4a2a" stroke-width="2.1" fill="none" stroke-linecap="round"/>'}
+};
+
+/* cumulative, static stage cues: leaf>2, scarf>3, glasses>4, grad-cap>5, sparkles>6 */
+function stageAcc(stage){
+  var a='';
+  if(stage>=2) a+='<path d="M90 30 Q102 22 106 34 Q98 42 90 38 Z" fill="#3f9d6e"/><path d="M92 36 L104 30" stroke="#155e52" stroke-width="1.2" fill="none"/>';
+  if(stage>=3) a+='<path d="M36 84 Q60 96 84 84 L82 92 Q60 102 38 92 Z" fill="#d9594c"/><rect x="52" y="90" width="9" height="18" rx="3" fill="#d9594c" transform="rotate(8 56 99)"/>';
+  if(stage>=4) a+='<g fill="none" stroke="#3a3a3a" stroke-width="2.4"><circle cx="48" cy="49" r="11"/><circle cx="72" cy="49" r="11"/><path d="M59 49 H61"/><path d="M37 47 L28 44 M83 47 L92 44"/></g>';
+  if(stage>=5) a+='<g><path d="M60 4 L99 17 L60 30 L21 17 Z" fill="#2a2f3a"/><path d="M45 23 L45 33 Q60 41 75 33 L75 23 L60 28 Z" fill="#2a2f3a"/><circle cx="99" cy="17" r="2.6" fill="#d99a3a"/><path d="M99 17 V31" stroke="#d99a3a" stroke-width="1.8"/><path d="M99 31 l-3 5 h6 z" fill="#d99a3a"/></g>';
+  if(stage>=6) a+='<g fill="#f3c969"><path d="M18 28 l1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6 Z"/><path d="M102 38 l1.3 2.8 2.8 1.3 -2.8 1.3 -1.3 2.8 -1.3 -2.8 -2.8 -1.3 2.8 -1.3 Z"/><circle cx="28" cy="86" r="2"/></g>';
+  return a;
+}
+
+function mascotSVG(emoji,stage,size){
+  stage=clamp(stage||1,1,6);
+  var m=MASCOTS[emoji]||MASCOTS["🐼"];
+  var scale=0.80+stage*0.06;
+  var w=Math.round((size||118)*scale*0.75);
+  var h=Math.round(w*1.1);
+  var s='';
+  if(stage>=6) s+='<circle cx="60" cy="58" r="60" fill="'+m.glow+'" opacity="0.15"/>';
+  s+='<ellipse cx="60" cy="106" rx="30" ry="24" fill="'+m.body+'" stroke="'+m.stroke+'" stroke-width="1.5"/>';
+  s+='<ellipse cx="60" cy="108" rx="19" ry="17" fill="'+m.belly+'"/>';
+  s+='<ellipse cx="32" cy="100" rx="10.5" ry="13" fill="'+m.arm+'"/>';
+  s+='<ellipse cx="88" cy="100" rx="10.5" ry="13" fill="'+m.arm+'"/>';
+  s+=m.head;
+  s+=stageAcc(stage);
+  return '<svg class="mascot" viewBox="0 0 120 132" width="'+w+'" height="'+h+'" role="img" aria-label="'+m.label+', stage '+stage+'">'+s+'</svg>';
+}
+function buddyName(emoji){var m=MASCOTS[emoji];return m?m.name:"buddy";}
+/* back-compat: existing call sites pass (stage,size); render the current account's buddy */
+function pandaSVG(stage,size){var e=(typeof acct==="function"&&acct()&&acct().emoji)||"🐼";return mascotSVG(e,stage,size);}
 
 /* Growth stages */
 var STAGES=[
-  {min:0,name:"Panda Cub",cap:"Just starting the adventure into Chinese!"},
-  {min:20,name:"Bamboo Scout",cap:"Nibbling through the first bamboo of vocabulary."},
-  {min:60,name:"Clever Panda",cap:"Words are sticking — keep the momentum!"},
-  {min:140,name:"Scholar Panda",cap:"Reading the world one hanzi at a time."},
-  {min:300,name:"Master Panda",cap:"A serious vocabulary, calmly mastered."},
-  {min:600,name:"Sage Panda",cap:"Wise, fluent and glowing with bamboo energy."}
+  {min:0,name:"Cub",cap:"Just starting the adventure into Chinese!"},
+  {min:20,name:"Scout",cap:"Nibbling through the first words of vocabulary."},
+  {min:60,name:"Quick Learner",cap:"Words are sticking — keep the momentum!"},
+  {min:140,name:"Scholar",cap:"Reading the world one hanzi at a time."},
+  {min:300,name:"Master",cap:"A serious vocabulary, calmly mastered."},
+  {min:600,name:"Sage",cap:"Wise, fluent and glowing with knowledge."}
 ];
 function growthPoints(acct){
   var m=0,f=0;
@@ -732,7 +818,7 @@ var DB=loadDB();
 
 function newAccount(name,emoji){
   var id="a"+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36);
-  return {id:id,name:name||"Panda",emoji:emoji||"🐼",created:Date.now(),
+  return {id:id,name:name||"Buddy",emoji:emoji||"🐼",created:Date.now(),
     xp:0,streak:0,lastDay:null,days:[],xpByDay:{},
     settings:{front:"han",langs:{en:true,th:false,ja:false},dataset:"hsk",groups:{hsk:"1"}},
     cards:{},best:{},qStats:{correct:0,total:0},log:[]};
@@ -810,7 +896,7 @@ function touchDay(){
 var lastStage=null;
 function flashGrowthMaybe(){
   var g=growthPoints(acct());var st=stageFromGP(g.gp);
-  if(lastStage!==null&&st>lastStage){toast("🌱 Bao grew into "+STAGES[st-1].name+"!","grow");}
+  if(lastStage!==null&&st>lastStage){var bn=buddyName((acct()&&acct().emoji)||"🐼");var who=(bn==="Bao")?"Bao":("Your "+bn);toast("🌱 "+who+" grew into "+STAGES[st-1].name+"!","grow");}
   lastStage=st;
 }
 
@@ -1114,7 +1200,7 @@ function endQuiz(){
   var earned=quiz.score*10+(quiz.qs.length-quiz.score)*2;
   $("#xpEarned").textContent="+"+earned+" XP earned";
   var title,sub,stage=stageFromGP(growthPoints(acct()).gp);
-  if(pct>=90){title="Outstanding! 🏆";sub="Bao is so proud of you.";setMood("happy");}
+  if(pct>=90){title="Outstanding! 🏆";sub=(buddyName(acct().emoji)==="Bao"?"Bao":"Your "+buddyName(acct().emoji))+" is so proud of you.";setMood("happy");}
   else if(pct>=70){title="Great work! 🎋";sub="You really know these.";setMood("happy");}
   else if(pct>=50){title="Good effort!";sub="A little more review and you've got it.";setMood("idle");}
   else{title="Keep going!";sub="Every quiz makes the next one easier.";setMood("sad");}
@@ -1261,7 +1347,7 @@ function showForm(){
 function saveNewAccount(){
   var name=($("#formName").value||"").trim()||"Panda";
   var a=newAccount(name,formEmoji);DB.accounts[a.id]=a;DB.current=a.id;saveDB();
-  lastStage=null;refreshAll();renderAcctList();$("#acctForm").style.display="none";refreshExport();toast("Profile created 🐼");
+  lastStage=null;refreshAll();renderAcctList();$("#acctForm").style.display="none";refreshExport();toast("Profile created "+formEmoji);
 }
 function refreshExport(){
   try{var code=btoa(unescape(encodeURIComponent(JSON.stringify(acct()))));$("#exportBox").value=code;}
