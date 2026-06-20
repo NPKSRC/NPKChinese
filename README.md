@@ -2,7 +2,7 @@
 
 A friendly, single-file web app for learning **HSK 1–6** Chinese vocabulary (6100 words) with
 swipeable flashcards, spaced-repetition memory tracking, quizzes, and meanings in
-**English, Thai, and Japanese**. Switch between built-in **courses** — the HSK 1–3 list or your own
+**English, Thai, and Japanese** (all HSK 1–6 now fully translated). Switch between built-in **courses** — the HSK 1–3 list or your own
 **class-lesson vocabulary** — right inside the app. Meet **Bao**, your panda study buddy, who *grows up* as you learn.
 
 ![level](https://img.shields.io/badge/HSK-1--6-4c9a4f) ![words](https://img.shields.io/badge/words-6100-2f6b33) ![langs](https://img.shields.io/badge/meanings-EN%20%C2%B7%20TH%20%C2%B7%20JA-3f7cc4) ![license](https://img.shields.io/badge/license-MIT-e7a83b)
