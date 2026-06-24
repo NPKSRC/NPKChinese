@@ -387,6 +387,61 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
   .card{transition:none}
 }
 :focus-visible{outline:3px solid var(--bamboo);outline-offset:2px;border-radius:6px}
+/* ============ MEMORY MATCH (Games) ============ */
+.mm-setup{background:var(--cloud);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:18px 16px;box-shadow:var(--shadow-sm)}
+.mm-setup h2{font-family:var(--display);font-weight:800;font-size:1.18rem;margin:0 0 2px}
+.mm-setup .sub{margin:0 0 14px;color:var(--ink-soft);font-size:.9rem;font-weight:600}
+.mm-scope{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--bamboo-tint);border-radius:999px;padding:7px 12px;font-size:.82rem;font-weight:700;color:var(--bamboo-deep);margin-bottom:16px}
+.mm-group{margin-bottom:14px}
+.mm-group>label{display:block;font-size:.72rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px}
+.mm-seg{display:flex;flex-wrap:wrap;gap:7px}
+.mm-seg button{flex:1 1 auto;min-width:64px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font-family:var(--display);font-weight:700;font-size:.9rem;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:.15s;line-height:1.15}
+.mm-seg button small{display:block;font-size:.66rem;color:var(--ink-faint);font-weight:600;margin-top:2px}
+.mm-seg button[aria-pressed="true"]{background:var(--bamboo);border-color:var(--bamboo);color:#fff}
+.mm-seg button[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
+.mm-seg button[disabled]{opacity:.4;cursor:not-allowed}
+.mm-hint{font-size:.76rem;color:var(--gold-deep);font-weight:700;margin:-6px 0 12px;min-height:1em}
+
+.mm-meta{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.mm-pill{background:var(--cloud);border:1.5px solid var(--line);border-radius:999px;padding:6px 13px;font-weight:800;font-size:.86rem;box-shadow:var(--shadow-sm)}
+.mm-pill b{color:var(--bamboo-deep)}
+
+.mm-grid{display:grid;gap:8px;margin:0 auto}
+.mm-grid.cols3{grid-template-columns:repeat(3,1fr)}
+.mm-grid.cols4{grid-template-columns:repeat(4,1fr)}
+.mm-tile{position:relative;aspect-ratio:3/4;border:none;background:none;padding:0;cursor:pointer;perspective:700px;font-family:var(--body)}
+.mm-tile .mm-inner{position:absolute;inset:0;transition:transform .42s cubic-bezier(.2,.7,.3,1.2);transform-style:preserve-3d}
+.mm-tile.up .mm-inner,.mm-tile.done .mm-inner{transform:rotateY(180deg)}
+.mm-face{position:absolute;inset:0;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;padding:6px}
+.mm-back{padding:0;box-shadow:var(--shadow-sm)}
+.mm-back.sun{background:#fdfbf6}
+.mm-back.moon{background:#17315c}
+.mm-back svg{width:100%;height:100%;display:block}
+.mm-front{background:var(--cloud);border:1.6px solid var(--line);transform:rotateY(180deg);box-shadow:var(--shadow-sm)}
+.mm-front .mm-txt{font-weight:700;line-height:1.18;word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.mm-front.han .mm-txt{font-family:var(--han);font-size:1.7rem;font-weight:800}
+.mm-front.han.trad .mm-txt{font-family:var(--han)}
+.mm-front.pin .mm-txt{font-size:1.05rem;color:var(--bamboo-deep)}
+.mm-front.th .mm-txt{font-family:var(--thai);font-size:.86rem}
+.mm-front.ja .mm-txt{font-family:var(--jp);font-size:.92rem}
+.mm-front.en .mm-txt{font-size:.82rem}
+.mm-front .mm-side{position:absolute;top:5px;left:6px;font-size:.56rem;font-weight:800;letter-spacing:.5px;color:var(--ink-faint);text-transform:uppercase}
+.mm-tile.done{cursor:default}
+.mm-tile.done .mm-front{background:var(--bamboo-tint);border-color:var(--familiar);opacity:.78}
+.mm-tile.wrong .mm-front{animation:mmShake .4s}
+.mm-tile.hit .mm-front{animation:mmPop .4s}
+@keyframes mmShake{0%,100%{transform:rotateY(180deg) translateX(0)}25%{transform:rotateY(180deg) translateX(-6px)}75%{transform:rotateY(180deg) translateX(6px)}}
+@keyframes mmPop{0%{transform:rotateY(180deg) scale(1)}45%{transform:rotateY(180deg) scale(1.09)}100%{transform:rotateY(180deg) scale(1)}}
+
+.mm-done{text-align:center;background:var(--cloud);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:22px 18px;box-shadow:var(--shadow-sm)}
+.mm-done .mm-mascot{display:flex;justify-content:center;margin-bottom:6px}
+.mm-done h2{font-family:var(--display);font-weight:800;margin:4px 0 2px}
+.mm-done p{margin:0 0 8px;color:var(--ink-soft);font-weight:600}
+.mm-done .mm-stats{display:flex;justify-content:center;gap:18px;margin:12px 0}
+.mm-done .mm-stats .n{font-family:var(--display);font-weight:800;font-size:1.5rem;color:var(--bamboo-deep)}
+.mm-done .mm-stats .l{font-size:.72rem;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.mm-xp{display:inline-block;background:var(--gold);color:#fff;font-weight:800;padding:6px 16px;border-radius:999px;margin-top:4px}
+.mm-best{display:inline-block;margin-top:8px;color:var(--gold-deep);font-weight:800;font-size:.9rem}
 </style>
 </head>
 <body data-mood="idle">
@@ -630,6 +685,76 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
     </div>
   </section>
 
+  <!-- ===== GAMES / MEMORY MATCH ===== -->
+  <section class="view" id="view-games">
+    <div id="mmSetup">
+      <div class="mm-setup">
+        <h2>🀄 Memory Match</h2>
+        <p class="sub">Flip the tiles and pair each word with its match.</p>
+        <div class="mm-scope" id="mmScope">📚 HSK 1</div>
+
+        <div class="mm-group">
+          <label>Card side A — hanzi</label>
+          <div class="mm-seg" id="mmSideA">
+            <button data-a="simp" aria-pressed="true">简 Simplified</button>
+            <button data-a="trad" aria-pressed="false">繁 Traditional</button>
+          </div>
+        </div>
+
+        <div class="mm-group">
+          <label>Card side B — match with</label>
+          <div class="mm-seg" id="mmSideB">
+            <button data-b="p" aria-pressed="true">Pinyin</button>
+            <button data-b="e" aria-pressed="false">English</button>
+            <button data-b="th" aria-pressed="false">ไทย</button>
+            <button data-b="ja" aria-pressed="false">日本語</button>
+            <button data-b="trad" aria-pressed="false">繁 Traditional<small>简 ↔ 繁 drill</small></button>
+          </div>
+        </div>
+        <div class="mm-hint" id="mmHint"></div>
+
+        <div class="mm-group">
+          <label>Pairs</label>
+          <div class="mm-seg" id="mmSize">
+            <button data-n="6" aria-pressed="true">6 pairs<small>easy</small></button>
+            <button data-n="8" aria-pressed="false">8 pairs<small>harder</small></button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="mmStartBtn" style="width:100%">Start matching</button>
+      </div>
+    </div>
+
+    <div id="mmPlay" style="display:none">
+      <div class="mm-meta">
+        <div class="mm-pill">Moves <b id="mmMoves">0</b></div>
+        <div class="mm-pill">Pairs <b><span id="mmFound">0</span>/<span id="mmTotal">6</span></b></div>
+        <div class="mm-pill">⏱ <b id="mmTime">0s</b></div>
+      </div>
+      <div class="mm-grid" id="mmGrid"></div>
+      <div class="controls"><button class="btn btn-ghost btn-sm" id="mmQuitBtn">Quit game</button></div>
+    </div>
+
+    <div id="mmDone" style="display:none">
+      <div class="mm-done">
+        <div class="mm-mascot" id="mmMascot"></div>
+        <h2 id="mmDoneTitle">Board cleared!</h2>
+        <p id="mmDoneSub">Nicely matched.</p>
+        <div class="mm-stats">
+          <div><div class="n" id="mmDoneMoves">0</div><div class="l">Moves</div></div>
+          <div><div class="n" id="mmDoneTime">0s</div><div class="l">Time</div></div>
+          <div><div class="n" id="mmDoneAcc">0%</div><div class="l">Accuracy</div></div>
+        </div>
+        <div class="mm-xp" id="mmXp">+0 XP</div>
+        <div class="mm-best" id="mmBest" style="display:none">🏅 New best!</div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-ghost" id="mmChangeBtn">Change setup</button>
+        <button class="btn btn-primary" id="mmAgainBtn">Play again</button>
+      </div>
+    </div>
+  </section>
+
   <p class="note">Vocabulary: <b>HSK 1–3</b> · 1000 words. English meanings from the official lists; <b>Thai &amp; Japanese</b> are study aids.</p>
   <p class="disclaimer">Thai &amp; Japanese translations are AI-generated drafts — a native speaker may refine some. Accounts &amp; progress are saved on this device.</p>
 </div>
@@ -641,6 +766,7 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
     <button data-view="quiz" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 9a2.5 2.5 0 113.5 2.3c-.9.5-1 1-1 1.7"/><circle cx="12" cy="17" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="9"/></svg>Quiz</button>
     <button data-view="browse" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Browse</button>
     <button data-view="progress" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16M8 16v-5M13 16V8M18 16v-3"/></svg>Progress</button>
+    <button data-view="games" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>Games</button>
   </div>
 </nav>
 
@@ -730,6 +856,8 @@ function buildDatasets(){
   return sets;
 }
 var DATASETS=buildDatasets();
+/* Set to true later to re-enable the Course selector (HSK / Class lessons). */
+var SHOW_COURSE_BAR=false;
 var DS_BY_KEY={};DATASETS.forEach(function(d){DS_BY_KEY[d.key]=d;});
 var WORD_BY_ID={};var ALL_WORDS=[];
 DATASETS.forEach(function(d){d.words.forEach(function(w){WORD_BY_ID[w.id]=w;});ALL_WORDS=ALL_WORDS.concat(d.words);});
@@ -737,7 +865,7 @@ DATASETS.forEach(function(d){d.words.forEach(function(w){WORD_BY_ID[w.id]=w;});A
 function curDS(){return DS_BY_KEY[acct().settings.dataset]||DATASETS[0];}
 function curGroupKey(){var s=acct().settings;var d=curDS();var g=s.groups&&s.groups[s.dataset];if(!g)g=(d.groups[0]?d.groups[0].key:"all");return g;}
 function setGroupKey(k){var s=acct().settings;if(!s.groups)s.groups={};s.groups[s.dataset]=k;}
-function groupDisplay(){var d=curDS();var g=curGroupKey();if(g==="all")return "All "+d.words.length;var gg=d.groups.filter(function(x){return x.key===g;})[0];return gg?gg.name:g;}
+function groupDisplay(){var d=curDS();var g=curGroupKey();if(g==="all")return "All "+d.words.length;if(/^cum:\d+$/.test(g))return "HSK 1–"+g.split(":")[1];var gg=d.groups.filter(function(x){return x.key===g;})[0];return gg?gg.name:g;}
 
 /* ---- Helpers ---- */
 var $=function(s,r){return (r||document).querySelector(s);};
@@ -1037,7 +1165,12 @@ var SPK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
 
 /* ============ STUDY ============ */
 var study={pool:[],idx:0,flipped:false,rated:false};
-function currentLevelWords(){var d=curDS();var g=curGroupKey();return (g==="all"?d.words:(d.byGroup[g]||[])).slice();}
+function groupWords(d,g){
+  if(g==="all")return d.words;
+  if(/^cum:\d+$/.test(g)){var max=+g.split(":")[1];return d.words.filter(function(w){return (+w.grp)<=max;});}
+  return d.byGroup[g]||[];
+}
+function currentLevelWords(){var d=curDS();return groupWords(d,curGroupKey()).slice();}
 function buildStudyPool(mode){
   var a=acct();
   if(mode==="due"){
@@ -1517,6 +1650,7 @@ function refreshAll(){
 function syncFrontChips(){var f=acct().settings.front;$$("#frontOpts .chip").forEach(function(c){c.setAttribute("aria-pressed",c.getAttribute("data-front")===f);});}
 function syncScriptChips(){var sc=acct().settings.script;$$("#scriptOpts .chip").forEach(function(c){c.setAttribute("aria-pressed",c.getAttribute("data-script")===sc);});}
 function renderDatasetBar(){
+  if(!SHOW_COURSE_BAR){var bar=$("#dsBar");if(bar){bar.style.display="none";bar.innerHTML="";}acct().settings.dataset="hsk";return;}
   var cur=acct().settings.dataset;
   $("#dsBar").innerHTML='<span class="ds-label">Course</span>'+DATASETS.map(function(d){
     return '<button data-ds="'+d.key+'" aria-pressed="'+(d.key===cur)+'">'+d.name+'</button>';
@@ -1529,6 +1663,14 @@ function renderDatasetBar(){
 function renderGroupBar(){
   var d=curDS(),gk=curGroupKey();
   var opts=d.groups.slice();
+  if(d.key==="hsk"){
+    var levs=d.groups.map(function(g){return +g.key;}).filter(function(x){return !isNaN(x);}).sort(function(a,b){return a-b;});
+    for(var ci=1;ci<levs.length-1;ci++){
+      var mx=levs[ci];
+      var cnt=d.words.filter(function(w){return (+w.grp)<=mx;}).length;
+      opts.push({key:"cum:"+mx,name:"HSK 1–"+mx,sub:cnt+" words · cumulative"});
+    }
+  }
   opts.push({key:"all",name:"All",sub:d.words.length+" words"});
   var cur=null;for(var i=0;i<opts.length;i++){if(opts[i].key===gk){cur=opts[i];break;}}
   if(!cur)cur=opts[opts.length-1];
@@ -1555,7 +1697,7 @@ function renderGroupBar(){
     document.addEventListener("keydown",function(e){if(e.key==="Escape"){var p=document.getElementById("lmPop");if(p&&!p.hidden){p.hidden=true;var t=document.getElementById("lmTrigger");if(t)t.setAttribute("aria-expanded","false");}}});
   }
 }
-function onGroupChange(){buildStudyPool("reset");renderCard();updateDueCounts();renderBrowse();updateQuizSetupLabels();syncLangButtons();if(curView==="progress")renderProgress();}
+function onGroupChange(){buildStudyPool("reset");renderCard();updateDueCounts();renderBrowse();updateQuizSetupLabels();syncLangButtons();if(curView==="progress")renderProgress();if(curView==="games"&&!mm.playing)renderGames();}
 function updateQuizSetupLabels(){$("#qPoolLevel").textContent=groupDisplay();updateDueCounts();}
 
 var curView="study";
@@ -1565,10 +1707,11 @@ function switchView(v){
   $$(".nav button").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-view")===v);});
   var topBars=(v==="progress")?"none":"";
   $("#levels").style.display=(v==="progress")?"none":"flex";
-  $("#dsBar").style.display=(v==="progress")?"none":"flex";
+  $("#dsBar").style.display=(!SHOW_COURSE_BAR||v==="progress")?"none":"flex";
   if(v==="progress")renderProgress();
   if(v==="browse")renderBrowse();
   if(v==="quiz"){updateQuizSetupLabels();}
+  if(v==="games")renderGames();
   if(v==="study")renderPanda();
   window.scrollTo(0,0);
 }
@@ -1714,6 +1857,182 @@ function init(){
   wireLanding();
   wireMascotTap();
 }
+/* ===================== MEMORY MATCH (Games) ===================== */
+var mm={a:"simp",b:"p",n:6,playing:false,deck:[],first:null,lock:false,
+        moves:0,found:0,total:6,t0:0,timer:null,scopeKey:""};
+
+function mmField(b){return b==="p"?"p":b==="e"?"e":b==="th"?"th":b==="ja"?"ja":"t";}
+function mmCls(side){return (side==="simp"||side==="trad")?"han":(side==="p"?"pin":side==="e"?"en":side==="th"?"th":side==="ja"?"ja":"han");}
+function mmTag(side){return side==="simp"?"简":side==="trad"?"繁":side==="p"?"拼音":side==="e"?"EN":side==="th"?"TH":side==="ja"?"JP":"繁";}
+function mmTextA(w){return mm.a==="trad"?(w.t||w.h):w.h;}
+function mmTextB(w){var b=mm.b;return b==="trad"?(w.t||""):(w[mmField(b)]||"");}
+
+function mmPoolWords(){
+  var ws=currentLevelWords();
+  if(mm.a==="trad"||mm.b==="trad"){ws=ws.filter(function(w){return w.t&&w.t!==w.h;});}
+  return ws.filter(function(w){
+    var aok=(mm.a==="trad")?!!w.t:!!w.h;
+    var bok;
+    if(mm.b==="p")bok=!!w.p;else if(mm.b==="e")bok=!!w.e;else if(mm.b==="th")bok=!!w.th;
+    else if(mm.b==="ja")bok=!!w.ja;else bok=!!w.t;
+    return aok&&bok;
+  });
+}
+function mmPickWords(limit){
+  var pool=shuffle(mmPoolWords()),picked=[],aset={},bset={};
+  for(var i=0;i<pool.length&&picked.length<limit;i++){
+    var w=pool[i],at=mmTextA(w),bt=mmTextB(w);
+    if(!at||!bt||at===bt)continue;
+    if(aset[at]||bset[bt])continue;
+    aset[at]=1;bset[bt]=1;picked.push(w);
+  }
+  return picked;
+}
+function mmMaxPairs(){return mmPickWords(99).length;}
+
+function mmSync(){
+  if(mm.b==="trad")mm.a="simp"; // 简↔繁 drill fixes A to simplified
+  $$("#mmSideA button").forEach(function(c){
+    c.setAttribute("aria-pressed",c.getAttribute("data-a")===mm.a);
+    c.disabled=(mm.b==="trad");
+  });
+  $$("#mmSideB button").forEach(function(c){c.setAttribute("aria-pressed",c.getAttribute("data-b")===mm.b);});
+  $$("#mmSize button").forEach(function(c){c.setAttribute("aria-pressed",(+c.getAttribute("data-n"))===mm.n);});
+}
+function mmValidate(){
+  var max=mmMaxPairs(),hint=$("#mmHint"),start=$("#mmStartBtn");
+  $$("#mmSize button").forEach(function(c){
+    var n=+c.getAttribute("data-n");c.disabled=(max<n);
+    if(max<n&&mm.n===n){mm.n=(max>=6?6:max);} // step down if needed
+  });
+  if(max<mm.n)mm.n=Math.max(3,max);
+  mmSync();
+  if(max<3){
+    hint.textContent="Not enough words for this combo here — try another level or course.";
+    start.disabled=true;
+  }else{
+    start.disabled=false;
+    hint.textContent=(mm.b==="trad")
+      ? max+" words differ between 简 & 繁 in this scope."
+      : (max<8?("Only "+max+" matching pairs in this scope."):"");
+  }
+}
+
+function renderGames(){
+  $("#mmScope").textContent="📚 "+curDS().short+" · "+groupDisplay();
+  // wire setup controls (idempotent)
+  $$("#mmSideA button").forEach(function(b){b.onclick=function(){mm.a=b.getAttribute("data-a");if(mm.a==="trad"&&mm.b==="trad")mm.b="p";mmValidate();};});
+  $$("#mmSideB button").forEach(function(b){b.onclick=function(){mm.b=b.getAttribute("data-b");if(mm.b==="trad")mm.a="simp";mmValidate();};});
+  $$("#mmSize button").forEach(function(b){b.onclick=function(){var n=+b.getAttribute("data-n");if(mmMaxPairs()>=n){mm.n=n;mmValidate();}};});
+  $("#mmStartBtn").onclick=mmStart;
+  $("#mmQuitBtn").onclick=mmQuit;
+  $("#mmAgainBtn").onclick=mmStart;
+  $("#mmChangeBtn").onclick=function(){mmShow("setup");};
+  mmValidate();
+  if(!mm.playing)mmShow("setup");
+}
+function mmShow(which){
+  $("#mmSetup").style.display=which==="setup"?"":"none";
+  $("#mmPlay").style.display=which==="play"?"":"none";
+  $("#mmDone").style.display=which==="done"?"":"none";
+}
+
+/* Card backs: Sun = Set A (hanzi side), Moon = Set B (match side) */
+var MM_SUN_BACK='<svg viewBox="0 0 150 200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="150" height="200" rx="14" fill="#fdfbf6"/><g fill="none" stroke="#e3811c" stroke-linecap="round"><rect x="9" y="9" width="132" height="182" rx="12" stroke-width="2.6"/><rect x="14.5" y="14.5" width="121" height="171" rx="8.5" stroke-width="1.3"/></g><polygon points="28,23 30.1,27.9 35,30 30.1,32.1 28,37 25.9,32.1 21,30 25.9,27.9" fill="#e3811c"/><circle cx="28" cy="42" r="1.7" fill="#e3811c"/><circle cx="28" cy="47" r="1.4" fill="#e3811c"/><circle cx="28" cy="52" r="1.1" fill="#e3811c"/><polygon points="122,23 124.1,27.9 129,30 124.1,32.1 122,37 119.9,32.1 115,30 119.9,27.9" fill="#e3811c"/><circle cx="122" cy="42" r="1.7" fill="#e3811c"/><circle cx="122" cy="47" r="1.4" fill="#e3811c"/><circle cx="122" cy="52" r="1.1" fill="#e3811c"/><polygon points="28,163 30.1,167.9 35,170 30.1,172.1 28,177 25.9,172.1 21,170 25.9,167.9" fill="#e3811c"/><circle cx="28" cy="158" r="1.7" fill="#e3811c"/><circle cx="28" cy="153" r="1.4" fill="#e3811c"/><circle cx="28" cy="148" r="1.1" fill="#e3811c"/><polygon points="122,163 124.1,167.9 129,170 124.1,172.1 122,177 119.9,172.1 115,170 119.9,167.9" fill="#e3811c"/><circle cx="122" cy="158" r="1.7" fill="#e3811c"/><circle cx="122" cy="153" r="1.4" fill="#e3811c"/><circle cx="122" cy="148" r="1.1" fill="#e3811c"/><polygon points="75,11.4 78.6,15 75,18.6 71.4,15" fill="#e3811c"/><circle cx="66" cy="15" r="1.5" fill="#e3811c"/><circle cx="84" cy="15" r="1.5" fill="#e3811c"/><polygon points="75,181.4 78.6,185 75,188.6 71.4,185" fill="#e3811c"/><circle cx="66" cy="185" r="1.5" fill="#e3811c"/><circle cx="84" cy="185" r="1.5" fill="#e3811c"/><polygon points="15,96.4 18.6,100 15,103.6 11.4,100" fill="#e3811c"/><circle cx="15" cy="91" r="1.5" fill="#e3811c"/><circle cx="15" cy="109" r="1.5" fill="#e3811c"/><polygon points="135,96.4 138.6,100 135,103.6 131.4,100" fill="#e3811c"/><circle cx="135" cy="91" r="1.5" fill="#e3811c"/><circle cx="135" cy="109" r="1.5" fill="#e3811c"/><g transform="translate(75,100)" fill="#ee8b22"><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(0)"/><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(45)"/><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(90)"/><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(135)"/><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(180)"/><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(225)"/><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(270)"/><polygon points="0,-44 4.6,-25 0,-16 -4.6,-25" transform="rotate(315)"/></g><circle cx="75" cy="100" r="20" fill="#fdfbf6"/><circle cx="75" cy="100" r="16.3" fill="#ee8b22"/><circle cx="75" cy="100" r="46" fill="none" stroke="#e3811c" stroke-width="2.3" stroke-dasharray="0.4 5.6" stroke-linecap="round"/><polygon points="75.0,50.8 78.2,54.0 75.0,57.2 71.8,54.0" fill="#e3811c"/><polygon points="121.0,96.8 124.2,100.0 121.0,103.2 117.8,100.0" fill="#e3811c"/><polygon points="75.0,142.8 78.2,146.0 75.0,149.2 71.8,146.0" fill="#e3811c"/><polygon points="29.0,96.8 32.2,100.0 29.0,103.2 25.8,100.0" fill="#e3811c"/></svg>';
+var MM_MOON_BACK='<svg viewBox="0 0 150 200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="150" height="200" rx="14" fill="#0e1d39"/><rect x="4" y="4" width="142" height="192" rx="11" fill="#17315c"/><g fill="none" stroke="#f2c63e" stroke-linecap="round"><rect x="11" y="11" width="128" height="178" rx="9" stroke-width="2.4"/><rect x="15.5" y="15.5" width="119" height="169" rx="6.5" stroke-width="1.2"/></g><polygon points="75,5.8 80.2,11 75,16.2 69.8,11" fill="#17315c" stroke="#f2c63e" stroke-width="1.6" stroke-linejoin="round"/><polygon points="75,183.8 80.2,189 75,194.2 69.8,189" fill="#17315c" stroke="#f2c63e" stroke-width="1.6" stroke-linejoin="round"/><polygon points="11,94.8 16.2,100 11,105.2 5.8,100" fill="#17315c" stroke="#f2c63e" stroke-width="1.6" stroke-linejoin="round"/><polygon points="139,94.8 144.2,100 139,105.2 133.8,100" fill="#17315c" stroke="#f2c63e" stroke-width="1.6" stroke-linejoin="round"/><polygon points="75,48.5 76.95,53.05 81.5,55 76.95,56.95 75,61.5 73.05,56.95 68.5,55 73.05,53.05" fill="#f2c63e"/><polygon points="75,138.5 76.95,143.05 81.5,145 76.95,146.95 75,151.5 73.05,146.95 68.5,145 73.05,143.05" fill="#f2c63e"/><polygon points="34,94 35.8,98.2 40,100 35.8,101.8 34,106 32.2,101.8 28,100 32.2,98.2" fill="#f2c63e"/><polygon points="116,94 117.8,98.2 122,100 117.8,101.8 116,106 114.2,101.8 110,100 114.2,98.2" fill="#f2c63e"/><circle cx="75" cy="100" r="33" fill="none" stroke="#f2c63e" stroke-width="3.2"/><circle cx="70" cy="100" r="20" fill="#f2c63e"/><circle cx="83" cy="96.5" r="18.5" fill="#17315c"/></svg>';
+
+function mmStart(){
+  var words=mmPickWords(mm.n);
+  if(words.length<3){mmShow("setup");mmValidate();return;}
+  mm.total=words.length;
+  mm.scopeKey=acct().settings.dataset+":"+curGroupKey();
+  var aTiles=[],bTiles=[];
+  words.forEach(function(w,i){
+    aTiles.push({pid:i,side:"a",text:mmTextA(w),cls:mmCls(mm.a),tag:mmTag(mm.a)});
+    bTiles.push({pid:i,side:"b",text:mmTextB(w),cls:mmCls(mm.b),tag:mmTag(mm.b)});
+  });
+  // Sun (Set A) fills the upper rows, Moon (Set B) the lower rows; shuffle within each zone
+  mm.deck=shuffle(aTiles).concat(shuffle(bTiles));
+  mm.first=null;mm.lock=false;mm.moves=0;mm.found=0;mm.playing=true;
+  mm.t0=Date.now();
+  if(mm.timer)clearInterval(mm.timer);
+  mm.timer=setInterval(mmTick,1000);
+  $("#mmMoves").textContent="0";$("#mmFound").textContent="0";
+  $("#mmTotal").textContent=mm.total;$("#mmTime").textContent="0s";
+  var grid=$("#mmGrid");
+  grid.className="mm-grid "+(mm.total>6?"cols4":"cols3");
+  grid.innerHTML=mm.deck.map(function(t,idx){
+    var back=(t.side==="a")?MM_SUN_BACK:MM_MOON_BACK;
+    var backCls=(t.side==="a")?"sun":"moon";
+    return '<button class="mm-tile" data-i="'+idx+'" aria-label="Hidden tile">'
+      +'<div class="mm-inner">'
+      +'<div class="mm-face mm-back '+backCls+'">'+back+'</div>'
+      +'<div class="mm-face mm-front '+t.cls+'"><span class="mm-side">'+t.tag+'</span><span class="mm-txt">'+escName(t.text)+'</span></div>'
+      +'</div></button>';
+  }).join("");
+  $$("#mmGrid .mm-tile").forEach(function(el){el.onclick=function(){mmFlip(+el.getAttribute("data-i"),el);};});
+  mmShow("play");setMood("think");window.scrollTo(0,0);
+}
+function mmTick(){if(!mm.playing)return;$("#mmTime").textContent=Math.round((Date.now()-mm.t0)/1000)+"s";}
+
+function mmFlip(i,el){
+  if(mm.lock||mm.playing===false)return;
+  if(el.classList.contains("up")||el.classList.contains("done"))return;
+  el.classList.add("up");
+  if(mm.first===null){mm.first={i:i,el:el};return;}
+  if(mm.first.i===i)return;
+  mm.moves++;$("#mmMoves").textContent=mm.moves;
+  var a=mm.deck[mm.first.i],b=mm.deck[i];
+  if(a.pid===b.pid&&a.side!==b.side){
+    var f1=mm.first.el,f2=el;mm.first=null;
+    f1.classList.add("hit");f2.classList.add("hit");
+    setTimeout(function(){
+      f1.classList.remove("hit","up");f2.classList.remove("hit","up");
+      f1.classList.add("done");f2.classList.add("done");
+    },380);
+    mm.found++;$("#mmFound").textContent=mm.found;
+    if(mm.found>=mm.total)setTimeout(mmFinish,520);
+  }else{
+    mm.lock=true;var f1=mm.first.el,f2=el;mm.first=null;
+    f1.classList.add("wrong");f2.classList.add("wrong");
+    setTimeout(function(){
+      f1.classList.remove("wrong","up");f2.classList.remove("wrong","up");mm.lock=false;
+    },560);
+  }
+}
+
+function mmFinish(){
+  mm.playing=false;if(mm.timer){clearInterval(mm.timer);mm.timer=null;}
+  var secs=Math.round((Date.now()-mm.t0)/1000);
+  var acc=mm.moves?Math.round(mm.found/mm.moves*100):100;
+  var xp=mm.total*3+Math.round((mm.moves?mm.found/mm.moves:1)*mm.total*2);
+  // best score (fewest moves, then fastest)
+  var a=acct();if(!a.mmBest)a.mmBest={};
+  var key=mm.scopeKey+"|"+mm.a+"|"+mm.b+"|"+mm.total;
+  var prev=a.mmBest[key],isBest=false;
+  if(!prev||mm.moves<prev.moves||(mm.moves===prev.moves&&secs<prev.time)){a.mmBest[key]={moves:mm.moves,time:secs};isBest=true;}
+  touchDay();
+  awardXP(xp,"Memory Match · "+mmTag(mm.a)+"↔"+mmTag(mm.b)+" ×"+mm.total,"game");
+  saveDB();
+  var stage=stageFromGP(growthPoints(acct()).gp);
+  $("#mmMascot").innerHTML=pandaSVG(stage,96);
+  var perfect=(mm.moves===mm.total);
+  $("#mmDoneTitle").textContent=perfect?"Perfect board! 🎋":"Board cleared!";
+  $("#mmDoneSub").textContent=perfect?"Not a single wrong flip — amazing memory.":(acc>=70?"Sharp matching!":"Nice — your recall is warming up.");
+  $("#mmDoneMoves").textContent=mm.moves;
+  $("#mmDoneTime").textContent=secs+"s";
+  $("#mmDoneAcc").textContent=acc+"%";
+  $("#mmXp").textContent="+"+xp+" XP";
+  $("#mmBest").style.display=isBest?"inline-block":"none";
+  flashMood("happy");
+  updateChip();
+  mmShow("done");window.scrollTo(0,0);
+}
+function mmQuit(){
+  mm.playing=false;if(mm.timer){clearInterval(mm.timer);mm.timer=null;}
+  setMood("idle");mmShow("setup");mmValidate();
+}
+
 init();
 showLanding();
 </script>
