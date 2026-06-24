@@ -539,9 +539,43 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
 .th-setup-best{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--bamboo-tint);border-radius:999px;padding:6px 12px;font-size:.82rem;font-weight:800;color:var(--bamboo-deep);margin:-2px 0 14px}
 .th-best{display:inline-block;margin-top:8px;color:var(--gold-deep);font-weight:800;font-size:.9rem}
 
+/* Tone Hero · survival (endless) lives */
+.th-pill.th-lives{display:inline-flex;align-items:center;gap:7px;padding:6px 13px}
+.th-hearts{display:inline-flex;align-items:center;gap:3px}
+.th-hearts .hh{font-size:1.05rem;line-height:1;display:inline-block;transition:transform .25s ease,opacity .25s ease,color .25s ease}
+.th-hearts .hh.full{color:var(--seal)}
+.th-hearts .hh.lost{color:var(--line);opacity:.6}
+.th-hearts .hh.break{animation:thHeartBreak .55s ease}
+@keyframes thHeartBreak{0%{transform:scale(1) rotate(0)}28%{transform:scale(1.4) rotate(0)}55%{transform:scale(.78) rotate(-9deg)}80%{transform:scale(1.04) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+
 /* scope lock: dim level/course pickers while a game is in progress */
 .levels.locked,.dsbar.locked{opacity:.5}
 .levels.locked .lm-trigger{cursor:not-allowed}
+
+/* Per-scope completion progress (Games setup screens) */
+.g-clear{margin:-2px 0 14px;background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r-md);padding:9px 12px}
+.g-clear-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.78rem;font-weight:800;color:var(--ink-soft);margin-bottom:6px}
+.g-clear-row .gc-n{color:var(--bamboo-deep)}
+.g-clear-row .gc-n.done{color:var(--gold-deep)}
+.g-clear-bar{height:7px;border-radius:999px;background:var(--paper-2);overflow:hidden}
+.g-clear-bar i{display:block;height:100%;width:0;border-radius:999px;background:var(--bamboo);transition:width .4s}
+.g-clear-bar i.done{background:linear-gradient(90deg,var(--gold),#ff9a3d)}
+
+/* Trophy / completion celebration */
+.trophy-modal{text-align:center}
+.trophy-badge{width:118px;height:118px;margin:4px auto 10px;position:relative}
+.trophy-badge svg{width:100%;height:100%;filter:drop-shadow(0 6px 14px rgba(227,129,28,.35))}
+.trophy-modal h2{font-family:var(--display);font-weight:800;font-size:1.5rem;margin:6px 0 4px}
+.trophy-modal .tm-sub{color:var(--ink-soft);font-weight:700;font-size:.9rem;margin:0 0 4px}
+.trophy-modal .tm-scope{display:inline-block;background:var(--gold);color:#fff;font-weight:800;font-size:.82rem;padding:5px 14px;border-radius:999px;margin:8px 0 2px}
+.trophy-modal .tm-count{color:var(--ink-faint);font-weight:700;font-size:.8rem;margin:10px 0 2px}
+.trophy-badge .ray{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(242,198,62,.0) 0 16deg,rgba(242,198,62,.28) 16deg 20deg);animation:trophySpin 9s linear infinite;z-index:-1}
+@keyframes trophySpin{to{transform:rotate(360deg)}}
+.trophy-pop{animation:trophyPop .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes trophyPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.confetti{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;border-radius:24px 24px 0 0}
+.confetti i{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;opacity:.9;animation:confettiFall linear forwards}
+@keyframes confettiFall{to{transform:translateY(125%) rotate(540deg);opacity:.2}}
 </style>
 </head>
 <body data-mood="idle">
@@ -845,6 +879,10 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
         </div>
 
         <div class="th-setup-best" id="mmSetupBest" style="display:none">🏅 Best this scope: <span id="mmSetupBestVal">—</span></div>
+        <div class="g-clear" id="mmClear" style="display:none">
+          <div class="g-clear-row"><span id="mmClearLabel">Cleared this scope</span><span class="gc-n" id="mmClearNum">0/0</span></div>
+          <div class="g-clear-bar"><i id="mmClearFill"></i></div>
+        </div>
         <button class="btn btn-primary" id="mmStartBtn" style="width:100%">Start matching</button>
       </div>
     </div>
@@ -890,19 +928,31 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
         <div class="th-legend">
           <span><b>ā</b> 1st</span><span><b>á</b> 2nd</span><span><b>ǎ</b> 3rd</span><span><b>à</b> 4th</span><span><b>a</b> neutral</span>
         </div>
+        <div class="mm-group">
+          <label>Mode</label>
+          <div class="mm-seg" id="thMode">
+            <button data-mode="fixed" aria-pressed="true">Fixed run<small>clear the set</small></button>
+            <button data-mode="endless" aria-pressed="false">Endless<small>3 lives · survival</small></button>
+          </div>
+        </div>
         <div class="th-hint" id="thHint"></div>
         <div class="th-setup-best" id="thSetupBest" style="display:none">🏅 Best this scope: <span id="thSetupBestVal">—</span></div>
-        <button class="btn btn-primary" id="thStartBtn" style="width:100%">Start · 12 questions</button>
+        <div class="g-clear" id="thClear" style="display:none">
+          <div class="g-clear-row"><span id="thClearLabel">Tones cleared this scope</span><span class="gc-n" id="thClearNum">0/0</span></div>
+          <div class="g-clear-bar"><i id="thClearFill"></i></div>
+        </div>
+        <button class="btn btn-primary" id="thStartBtn" style="width:100%">Start · 12 words</button>
       </div>
     </div>
 
     <div id="thPlay" style="display:none">
       <div class="th-meta">
-        <div class="th-pill">Question <b><span id="thQNum">1</span>/<span id="thQTotal">12</span></b></div>
+        <div class="th-pill th-lives" id="thLives" style="display:none">Lives <span class="th-hearts" id="thHearts"></span></div>
+        <div class="th-pill" id="thQPill">Cleared <b><span id="thQNum">0</span>/<span id="thQTotal">12</span></b></div>
         <div class="th-pill th-score">Score <b id="thScore">0</b></div>
         <div class="th-pill th-combo" id="thCombo" data-mult="1">Combo <b id="thMult">×1</b></div>
       </div>
-      <div class="th-progress"><i id="thBar" style="width:0%"></i></div>
+      <div class="th-progress" id="thProgress"><i id="thBar" style="width:0%"></i></div>
       <div class="th-stage">
         <div class="th-pop" id="thPop"></div>
         <div class="th-char" id="thChar">字</div>
@@ -923,7 +973,7 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
         <div class="th-stats">
           <div><div class="n" id="thDoneScore">0</div><div class="l">Score</div></div>
           <div><div class="n" id="thDoneCombo">0</div><div class="l">Best combo</div></div>
-          <div><div class="n" id="thDoneAcc">0%</div><div class="l">Accuracy</div></div>
+          <div><div class="n" id="thDoneAcc">0%</div><div class="l" id="thDoneAccLbl">Accuracy</div></div>
         </div>
         <div class="th-xp" id="thXp">+0 XP</div>
         <div class="th-best" id="thBest" style="display:none">🏅 New best!</div>
@@ -991,7 +1041,21 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
   </div>
 </div>
 
+<!-- Trophy / completion celebration modal -->
+<div class="modal-back" id="trophyModal">
+  <div class="modal trophy-modal" role="dialog" aria-modal="true" aria-label="Achievement unlocked">
+    <div class="confetti" id="trophyConfetti" aria-hidden="true"></div>
+    <div class="trophy-badge trophy-pop" id="trophyBadge"></div>
+    <h2 id="trophyTitle">Level complete!</h2>
+    <p class="tm-sub" id="trophySub">Beautifully done.</p>
+    <div class="tm-scope" id="trophyScope">HSK 1</div>
+    <div class="tm-count" id="trophyCount"></div>
+    <button class="btn btn-primary" id="trophyOkBtn" style="width:100%;margin-top:16px">Wonderful!</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
 
 <script>
 // HSK Vocabulary Database with EN/TH/JA — fields: h(hanzi) p(pinyin) pos e(english) th(thai) ja(japanese)
@@ -1247,6 +1311,8 @@ function migrateAccount(a){
   // migrate old card ids "L-i" -> "hsk:L-i"
   if(a.cards){var nc={};for(var k in a.cards){nc[/^[123]-\d+$/.test(k)?("hsk:"+k):k]=a.cards[k];}a.cards=nc;}
   if(!a.best)a.best={};if(!a.qStats)a.qStats={correct:0,total:0};
+  if(!a.cleared)a.cleared={th:{},mm:{}};if(!a.cleared.th)a.cleared.th={};if(!a.cleared.mm)a.cleared.mm={};
+  if(!a.gameTrophies)a.gameTrophies={};
   if(!a.xpByDay)a.xpByDay={};if(!a.log)a.log=[];if(typeof a.xp!=="number")a.xp=0;if(typeof a.streak!=="number")a.streak=0;
 }
 function ensureAccount(){
@@ -2127,6 +2193,7 @@ function mmValidate(){
   }else{
     box.style.display="none";
   }
+  renderClearBar("mm");
 }
 
 var games={view:"hub"}; // "hub" | "mm" | "th"
@@ -2152,6 +2219,7 @@ function renderGames(){
   $("#thStartBtn").onclick=thStart;
   $("#thQuitBtn").onclick=thQuit;
   $("#thAgainBtn").onclick=thStart;
+  $$("#thMode button").forEach(function(b){b.onclick=function(){acct().settings.thMode=b.getAttribute("data-mode");saveDB();thValidate();};});
   // tap the meaning hint to reveal the translation (one-way per question)
   $("#thMeaning").onclick=function(){
     if(this.getAttribute("data-shown")==="1")return;
@@ -2161,6 +2229,8 @@ function renderGames(){
   $("#thBackBtn").onclick=function(){games.view="hub";renderGames();};
   $("#thChangeBtn").onclick=function(){thShow("setup");thValidate();};
   $("#thDoneBackBtn").onclick=function(){games.view="hub";renderGames();};
+  // Trophy celebration close
+  $("#trophyOkBtn").onclick=closeTrophy;
   // Hub cards
   $("#gameCardMM").onclick=function(){games.view="mm";renderGames();};
   $("#gameCardTH").onclick=function(){games.view="th";renderGames();};
@@ -2187,6 +2257,7 @@ function mmStart(){
   var words=mmPickWords(mm.n);
   if(words.length<3){mmShow("setup");mmValidate();return;}
   mm.total=words.length;
+  mm.words=words;
   mm.scopeKey=acct().settings.dataset+":"+curGroupKey();
   var aTiles=[],bTiles=[];
   words.forEach(function(w,i){
@@ -2228,6 +2299,7 @@ function mmFlip(i,el){
   var a=mm.deck[mm.first.i],b=mm.deck[i];
   if(a.pid===b.pid&&a.side!==b.side){
     var f1=mm.first.el,f2=el;mm.first=null;
+    if(mm.words&&mm.words[a.pid])markCleared("mm",mm.words[a.pid].id);
     f1.classList.add("hit");f2.classList.add("hit");
     setTimeout(function(){
       f1.classList.remove("hit","up");f2.classList.remove("hit","up");
@@ -2273,6 +2345,7 @@ function mmFinish(){
   flashMood("happy");
   updateChip();
   mmShow("done");window.scrollTo(0,0);
+  checkGameCompletion("mm");
 }
 function mmQuit(){
   mm.playing=false;if(mm.timer){clearInterval(mm.timer);mm.timer=null;}
@@ -2280,10 +2353,113 @@ function mmQuit(){
   setMood("idle");mmShow("setup");mmValidate();
 }
 
+/* ===================== GAME COMPLETION & TROPHIES ===================== */
+/* Long-term, per-word progress. A word is "cleared" in Tone Hero when its tone
+   is answered correctly, and in Memory Match when its pair is matched. Trophies
+   fire once per HSK level (and once for the whole course) per game. */
+
+// Words a game can clear within a group. Tone Hero only quizzes single-character
+// words, so its denominator is that subset; Memory Match uses every word.
+function gameEligible(kind,words){
+  if(kind==="th")return words.filter(function(w){return w&&w.h&&w.h.length===1&&w.p;});
+  return words.filter(function(w){return w&&w.id;});
+}
+function clearedMap(kind){var a=acct();if(!a.cleared)a.cleared={th:{},mm:{}};if(!a.cleared[kind])a.cleared[kind]={};return a.cleared[kind];}
+function markCleared(kind,id){var m=clearedMap(kind);if(m[id])return false;m[id]=1;return true;}
+
+// Completion stats for an arbitrary word list (used for the per-scope bar).
+function clearStats(kind,words){
+  var elig=gameEligible(kind,words),m=clearedMap(kind),done=0;
+  for(var i=0;i<elig.length;i++){if(m[elig[i].id])done++;}
+  return {done:done,total:elig.length};
+}
+
+// After a session, see whether any HSK level (or the whole course) just hit 100%
+// for this game, and celebrate each newly-completed milestone once.
+function checkGameCompletion(kind){
+  var a=acct();if(!a.gameTrophies)a.gameTrophies={};
+  var d=curDS(),wins=[];
+  d.groups.forEach(function(g){
+    var key=kind+"|"+d.key+"|"+g.key;
+    if(a.gameTrophies[key])return;
+    var st=clearStats(kind,d.byGroup[g.key]||[]);
+    if(st.total>0&&st.done>=st.total){a.gameTrophies[key]=1;wins.push({type:"level",name:g.name,count:st.total});}
+  });
+  // whole course
+  var allKey=kind+"|"+d.key+"|__all__";
+  if(!a.gameTrophies[allKey]){
+    var all=clearStats(kind,d.words);
+    if(all.total>0&&all.done>=all.total){a.gameTrophies[allKey]=1;wins.push({type:"all",name:d.name,count:all.total});}
+  }
+  if(wins.length){
+    saveDB();
+    // level trophies first, grand trophy last
+    wins.sort(function(x,y){return (x.type==="all"?1:0)-(y.type==="all"?1:0);});
+    wins.forEach(function(w){trophyQueue.push({kind:kind,win:w});});
+    if(!trophyShowing)showNextTrophy();
+  }
+}
+
+var TROPHY_SVG='<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#e3811c"/></linearGradient></defs><path d="M34 22h52v10c0 16-9 27-26 27S34 48 34 32V22Z" fill="url(#tg)" stroke="#c96b12" stroke-width="2.5"/><path d="M34 26H22c-2 0-3 1-3 3 0 12 8 19 18 20" stroke="#c96b12" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M86 26h12c2 0 3 1 3 3 0 12-8 19-18 20" stroke="#c96b12" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="54" y="58" width="12" height="16" fill="url(#tg)" stroke="#c96b12" stroke-width="2"/><path d="M42 74h36l-4 12H46l-4-12Z" fill="url(#tg)" stroke="#c96b12" stroke-width="2.5" stroke-linejoin="round"/><rect x="38" y="86" width="44" height="10" rx="3" fill="url(#tg)" stroke="#c96b12" stroke-width="2.5"/><path d="M60 30l3.4 6.9 7.6 1.1-5.5 5.4 1.3 7.6L60 47l-6.8 3.6 1.3-7.6-5.5-5.4 7.6-1.1L60 30Z" fill="#fff" opacity=".92"/></svg>';
+var trophyQueue=[],trophyShowing=false;
+function fireConfetti(){
+  var box=document.getElementById("trophyConfetti");if(!box)return;
+  box.innerHTML="";var cols=["#f2c63e","#e3811c","#7BA05B","#d96b52","#fff3df"];
+  for(var i=0;i<26;i++){
+    var p=document.createElement("i");
+    p.style.left=(Math.random()*100)+"%";
+    p.style.background=cols[i%cols.length];
+    p.style.animationDuration=(1.6+Math.random()*1.4)+"s";
+    p.style.animationDelay=(Math.random()*0.5)+"s";
+    p.style.transform="translateY(0) rotate("+(Math.random()*180)+"deg)";
+    box.appendChild(p);
+  }
+}
+function showNextTrophy(){
+  var item=trophyQueue.shift();
+  if(!item){trophyShowing=false;return;}
+  trophyShowing=true;
+  var w=item.win,gameName=(item.kind==="th"?"Tone Hero":"Memory Match");
+  var badge=document.getElementById("trophyBadge");
+  badge.innerHTML='<span class="ray"></span>'+TROPHY_SVG;
+  badge.classList.remove("trophy-pop");void badge.offsetWidth;badge.classList.add("trophy-pop");
+  if(w.type==="all"){
+    document.getElementById("trophyTitle").textContent="Grand champion! 🏆";
+    document.getElementById("trophySub").textContent="You've cleared every level in "+gameName+"!";
+    document.getElementById("trophyScope").textContent="All of "+w.name;
+  }else{
+    document.getElementById("trophyTitle").textContent="Level cleared! 🏆";
+    document.getElementById("trophySub").textContent="You've completed all of "+w.name+" in "+gameName+"!";
+    document.getElementById("trophyScope").textContent=w.name;
+  }
+  document.getElementById("trophyCount").textContent=(item.kind==="th"?(w.count+" single-character words mastered"):(w.count+" words matched"));
+  document.getElementById("trophyModal").classList.add("show");
+  fireConfetti();
+  flashMood("happy");
+}
+function closeTrophy(){
+  document.getElementById("trophyModal").classList.remove("show");
+  // chain to the next milestone, if any, after the close animation
+  setTimeout(function(){ if(trophyQueue.length){showNextTrophy();} else {trophyShowing=false;} },260);
+}
+
+// Per-scope completion bar on a game's setup screen (prefix: "mm" or "th").
+function renderClearBar(kind){
+  var box=$("#"+kind+"Clear");if(!box)return;
+  var st=clearStats(kind,currentLevelWords());
+  if(st.total<=0){box.style.display="none";return;}
+  box.style.display="";
+  var done=st.done>=st.total,pct=Math.round(st.done/st.total*100);
+  var num=$("#"+kind+"ClearNum");num.textContent=st.done+"/"+st.total+(done?" ✓":"");num.className="gc-n"+(done?" done":"");
+  var fill=$("#"+kind+"ClearFill");fill.style.width=pct+"%";fill.className=done?"done":"";
+  $("#"+kind+"ClearLabel").textContent=(kind==="th"?"Tones cleared · ":"Cleared · ")+groupDisplay();
+}
+
 /* ===================== TONE HERO (Games) ===================== */
-var th={playing:false,queue:[],idx:0,correct:0,answered:0,total:12,locked:false,scopeKey:"",score:0,streak:0,bestStreak:0,mult:1};
+var th={playing:false,queue:[],idx:0,correct:0,answered:0,mastered:0,total:12,locked:false,scopeKey:"",score:0,streak:0,bestStreak:0,mult:1,mode:"fixed",lives:3,cur:null};
 var TH_RUN=12; // fixed run length
 var TH_BASE=10; // base points per correct answer
+var TH_LIVES=3; // survival lives in endless mode
 // streak → multiplier tiers (climbs on consecutive correct, resets on a miss)
 function thMult(streak){
   if(streak>=8)return 5;
@@ -2292,8 +2468,13 @@ function thMult(streak){
   if(streak>=2)return 2;
   return 1;
 }
-// best record keyed dataset + group + run length (mirrors Memory Match scoping)
-function thBestKey(total){return acct().settings.dataset+":"+curGroupKey()+"|"+(total||TH_RUN);}
+// selected mode is remembered per profile in settings
+function thCurMode(){return (acct().settings.thMode==="endless")?"endless":"fixed";}
+// best record keyed dataset + group + mode (run length for fixed, "endless" for survival)
+function thBestKey(mode,total){
+  var base=acct().settings.dataset+":"+curGroupKey();
+  return base+"|"+(mode==="endless"?"endless":(total||TH_RUN));
+}
 
 // reference vowel faces for each tone button
 var TH_TONES=[
@@ -2310,53 +2491,85 @@ function thPool(){
     return w&&w.h&&w.h.length===1&&w.p;
   });
 }
-function thBuildQueue(n){
-  var pool=shuffle(thPool());
-  if(!pool.length)return [];
-  var q=pool.slice(0,n);
-  // if the scope has fewer than n single-syllable words, top up with repeats
-  var i=0;
-  while(q.length<n){q.push(pool[i%pool.length]);i++;}
-  return shuffle(q);
+// Build the round's working queue (distinct words). Fixed = up to TH_RUN words;
+// endless = the whole single-character pool. A correct answer removes a word from
+// the queue for the rest of the round; a miss re-queues it until it's cleared.
+function thBuildRound(endless){
+  var pool=shuffle(thPool().slice());
+  return endless ? pool : pool.slice(0,TH_RUN);
 }
 function thShow(which){
   $("#thSetup").style.display=which==="setup"?"":"none";
   $("#thPlay").style.display=which==="play"?"":"none";
   $("#thDone").style.display=which==="done"?"":"none";
 }
+function thSyncMode(){
+  var m=thCurMode();
+  $$("#thMode button").forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-mode")===m ? "true":"false");
+  });
+}
 function thValidate(){
   $("#thScope").textContent="📚 "+curDS().short+" · "+groupDisplay();
+  thSyncMode();
+  var m=thCurMode();
   var n=thPool().length,hint=$("#thHint"),start=$("#thStartBtn");
   if(n<4){
     hint.textContent="Not enough single-character words in this scope — try another level.";
     start.disabled=true;
   }else{
     start.disabled=false;
-    hint.textContent=(n<TH_RUN)?("Only "+n+" single-character words here — some may repeat."):"";
+    if(m==="endless"){
+      hint.textContent="Three lives — one wrong tone costs a life. Missed words come back until you nail them.";
+    }else{
+      hint.textContent=(n<TH_RUN)?("This scope has "+n+" single-character words — clear them all to finish."):"Clear all "+TH_RUN+" — missed tones return until you get them right.";
+    }
   }
-  // per-scope best (dataset + group + run length)
+  var fixedN=Math.min(n,TH_RUN);
+  start.textContent=(m==="endless")?("Start · "+TH_LIVES+" lives"):("Start · "+fixedN+" words");
+  // per-scope best for the selected mode
   var a=acct();if(!a.thBest)a.thBest={};
-  var b=a.thBest[thBestKey(TH_RUN)],box=$("#thSetupBest");
+  var b=a.thBest[thBestKey(m,TH_RUN)],box=$("#thSetupBest");
   if(b&&b.score>0){
     box.style.display="";
-    $("#thSetupBestVal").textContent=b.score+" pts · ×"+b.streak+" combo";
+    $("#thSetupBestVal").textContent=b.score+" pts · ×"+(b.streak||0)+" combo";
   }else{
     box.style.display="none";
   }
+  renderClearBar("th");
 }
 function thStart(){
-  var q=thBuildQueue(TH_RUN);
+  var m=thCurMode();
+  th.mode=m;
+  var endless=(m==="endless");
+  if(thPool().length<4){thShow("setup");thValidate();return;}
+  var q=thBuildRound(endless);
   if(q.length<4){thShow("setup");thValidate();return;}
-  th.queue=q;th.total=q.length;
-  th.idx=0;th.correct=0;th.answered=0;th.locked=false;th.playing=true;
-  th.score=0;th.streak=0;th.bestStreak=0;th.mult=1;
+  th.queue=q;th.total=q.length;th.lives=endless?TH_LIVES:0;
+  th.mastered=0;th.correct=0;th.answered=0;th.locked=false;th.playing=true;
+  th.score=0;th.streak=0;th.bestStreak=0;th.mult=1;th.cur=null;
   th.scopeKey=acct().settings.dataset+":"+curGroupKey();
   applyScopeLock(true);
-  $("#thQTotal").textContent=th.total;
+  // mode-specific meta UI
+  $("#thQPill").style.display=endless?"none":"";
+  $("#thLives").style.display=endless?"":"none";
+  $("#thProgress").style.display=endless?"none":"";
+  if(endless){thRenderLives();}else{$("#thQNum").textContent="0";$("#thQTotal").textContent=th.total;}
   $("#thScore").textContent="0";
   thSetCombo();
   thShow("play");setMood("think");window.scrollTo(0,0);
   thRenderQuestion();
+}
+// render the three survival hearts; brokenIdx (0-based) plays the break animation
+function thRenderLives(brokenIdx){
+  var el=$("#thHearts");if(!el)return;
+  var html="";
+  for(var i=0;i<TH_LIVES;i++){
+    var lost=(i>=th.lives);
+    var cls="hh "+(lost?"lost":"full")+((brokenIdx===i)?" break":"");
+    html+='<span class="'+cls+'">'+(lost?"♡":"♥")+'</span>';
+  }
+  el.innerHTML=html;
 }
 function thSetCombo(){
   var pill=$("#thCombo");
@@ -2365,11 +2578,15 @@ function thSetCombo(){
 }
 function thRenderQuestion(){
   th.locked=false;
-  var w=th.queue[th.idx];
-  $("#thQNum").textContent=(th.idx+1);
+  if(!th.queue.length){thFinish();return;}
+  var w=th.queue.shift();
+  th.cur=w;
   $("#thScore").textContent=th.score;
   thSetCombo();
-  $("#thBar").style.width=(th.idx/th.total*100)+"%";
+  if(th.mode!=="endless"){
+    $("#thQNum").textContent=th.mastered;
+    $("#thBar").style.width=(th.mastered/th.total*100)+"%";
+  }
   $("#thChar").innerHTML=escName(displayHan(w));
   $("#thPin").textContent=stripTone(w.p);
   // optional meaning hint — translation only (no pinyin/tone), reset to hidden each question
@@ -2393,14 +2610,15 @@ function thRenderQuestion(){
 }
 function thAnswer(tone,btn){
   if(th.locked)return;th.locked=true;
-  var w=th.queue[th.idx];
+  var w=th.cur;
   var ans=pinyinTone(w.p);
   th.answered++;
   var ok=(tone===ans);
   $$("#thTones .th-tone").forEach(function(b){b.disabled=true;});
   var rev=$("#thReveal");
   if(ok){
-    btn.classList.add("correct");th.correct++;
+    btn.classList.add("correct");th.correct++;th.mastered++;
+    if(w&&w.id)markCleared("th",w.id);
     // combo climbs, multiplier follows, score accrues
     th.streak++;
     if(th.streak>th.bestStreak)th.bestStreak=th.streak;
@@ -2413,6 +2631,7 @@ function thAnswer(tone,btn){
     thPop("+"+pts);
     rev.textContent=w.p;rev.className="th-reveal ok";
     flashMood("happy");
+    // correct → word leaves the round (it was already shifted off the queue)
   }else{
     btn.classList.add("wrong");
     // miss resets the streak and multiplier
@@ -2420,6 +2639,13 @@ function thAnswer(tone,btn){
     $$("#thTones .th-tone").forEach(function(b){if(+b.getAttribute("data-tone")===ans)b.classList.add("correct");});
     rev.textContent=w.p;rev.className="th-reveal no";
     flashMood("sad");
+    // miss → re-queue this word a couple of slots back so it returns until cleared
+    th.queue.splice(Math.min(th.queue.length,2),0,w);
+    // survival: a miss costs a life
+    if(th.mode==="endless"){
+      th.lives=Math.max(0,th.lives-1);
+      thRenderLives(th.lives); // break the heart just lost
+    }
   }
   setTimeout(thNext,ok?760:1280);
 }
@@ -2428,50 +2654,75 @@ function thPop(txt){
   p.textContent=txt;p.classList.remove("go");void p.offsetWidth;p.classList.add("go");
 }
 function thNext(){
-  th.idx++;
-  $("#thBar").style.width=(th.idx/th.total*100)+"%";
-  if(th.idx>=th.total){thFinish();return;}
+  if(th.mode==="endless"){
+    if(th.lives<=0){thFinish();return;}      // out of lives
+    if(!th.queue.length){thFinish();return;} // mastered the whole scope
+    thRenderQuestion();
+    return;
+  }
+  // fixed: round ends once every word has been cleared
+  if(!th.queue.length){thFinish();return;}
   thRenderQuestion();
 }
 function thFinish(){
   th.playing=false;
   applyScopeLock(false);
-  var acc=th.total?Math.round(th.correct/th.total*100):0;
-  var perfect=(th.correct===th.total);
-  var xp=th.correct*4+(perfect?8:0);
-  // per-scope best score (dataset + group + run length); higher score wins, tie-break on combo
+  var endless=(th.mode==="endless");
+  var denom=th.answered||1;
+  // accuracy here is the first-try success rate (correct answers ÷ total taps)
+  var acc=Math.round(th.correct/denom*100);
+  var wholeScope=endless&&th.lives>0&&!th.queue.length; // cleared the entire scope alive
+  var perfect=(!endless)&&(th.answered===th.total);     // cleared every word with zero misses
+  var xp=th.correct*4+(perfect?8:0)+(wholeScope?10:0);
+  // per-scope best for this mode; higher score wins, tie-break on best combo
   var a=acct();if(!a.thBest)a.thBest={};
-  var key=th.scopeKey+"|"+th.total;
+  var key=thBestKey(th.mode,th.total);
   var prev=a.thBest[key],improved=false;
-  if(!prev||th.score>prev.score||(th.score===prev.score&&th.bestStreak>prev.streak)){
-    a.thBest[key]={score:th.score,streak:th.bestStreak};improved=true;
+  if(!prev||th.score>prev.score||(th.score===prev.score&&th.bestStreak>(prev.streak||0))){
+    a.thBest[key]={score:th.score,streak:th.bestStreak,answered:th.answered};improved=true;
   }
   var isBest=improved&&th.score>0;
   touchDay();
-  awardXP(xp,"Tone Hero · "+th.correct+"/"+th.total+" · "+th.score+"pts","game");
+  awardXP(xp,"Tone Hero · "+(endless?"Endless · ":"")+th.correct+"/"+th.answered+" · "+th.score+"pts","game");
   saveDB();
   var stage=stageFromGP(growthPoints(acct()).gp);
   $("#thMascot").innerHTML=pandaSVG(stage,96);
   var title,sub;
-  if(perfect){title="Perfect pitch! 🎶";sub="Every tone nailed — incredible ear.";}
-  else if(acc>=80){title="Sharp ear! 🎵";sub="You really hear the tones.";}
-  else if(acc>=50){title="Run complete!";sub="Tones are clicking into place.";}
-  else{title="Keep tuning!";sub="Every run trains your ear a little more.";}
+  if(endless){
+    if(wholeScope){title="Scope cleared! 🏯";sub="You mastered every tone in this scope without losing all your lives.";}
+    else if(th.bestStreak>=8){title="Unstoppable! 🔥";sub="A "+th.answered+"-answer run on just three lives.";}
+    else if(th.correct>=12){title="Tone survivor! 🎶";sub="You cleared "+th.correct+" tones before the lives ran out.";}
+    else if(th.correct>=6){title="Good run!";sub="Lives are gone — but your ear is sharpening.";}
+    else{title="Run over!";sub="Every life lost teaches your ear something.";}
+  }else{
+    if(perfect){title="Perfect pitch! 🎶";sub="Cleared every word on the first try — incredible ear.";}
+    else if(acc>=80){title="Sharp ear! 🎵";sub="You really hear the tones.";}
+    else if(acc>=50){title="Set cleared!";sub="Tones are clicking into place.";}
+    else{title="Set cleared!";sub="A few took several tries — that's how the ear learns.";}
+  }
   $("#thDoneTitle").textContent=title;
   $("#thDoneSub").textContent=sub;
   $("#thDoneScore").textContent=th.score;
   $("#thDoneCombo").textContent="×"+th.bestStreak;
-  $("#thDoneAcc").textContent=acc+"%";
+  // third stat: first-try accuracy (fixed) vs tones cleared (endless)
+  if(endless){
+    $("#thDoneAcc").textContent=th.correct;
+    $("#thDoneAccLbl").textContent="Cleared";
+  }else{
+    $("#thDoneAcc").textContent=acc+"%";
+    $("#thDoneAccLbl").textContent="First-try";
+  }
   $("#thXp").textContent="+"+xp+" XP";
   var bestEl=$("#thBest");
-  if(isBest){bestEl.style.display="inline-block";bestEl.textContent="🏅 New best: "+th.score+" pts";}
+  if(isBest){bestEl.style.display="inline-block";bestEl.textContent=(endless?"🏅 New high score: ":"🏅 New best: ")+th.score+" pts";}
   else{
-    bestEl.style.display="inline-block";bestEl.textContent="🏅 Best: "+prev.score+" pts · ×"+prev.streak+" combo";
+    bestEl.style.display="inline-block";bestEl.textContent="🏅 Best: "+prev.score+" pts · ×"+(prev.streak||0)+" combo";
   }
-  flashMood(acc>=50?"happy":"sad");
+  flashMood(endless?(th.correct>=6?"happy":"sad"):(acc>=50?"happy":"sad"));
   flashGrowthMaybe();
   updateChip();
   thShow("done");window.scrollTo(0,0);
+  checkGameCompletion("th");
 }
 function thQuit(){
   th.playing=false;
