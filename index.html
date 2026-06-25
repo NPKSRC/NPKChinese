@@ -210,6 +210,13 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
 .study-optrow .optrow-div{flex:0 0 auto;align-self:stretch;width:1.5px;min-height:64px;background:var(--line);border-radius:2px;margin:2px 0}
 .study-optrow .study-actions{flex:0 0 auto;display:flex;flex-direction:column;gap:8px}
 .study-optrow .study-actions .btn{white-space:nowrap;width:100%}
+.study-optrow .opts-stack{justify-content:center}
+.selrow{display:flex;align-items:center;gap:9px}
+.sel-lbl{flex:0 0 auto;min-width:46px;font-family:var(--display);font-weight:700;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft)}
+.seldrop{position:relative;display:flex;flex:1 1 auto;min-width:0}
+.seldrop select{flex:1 1 auto;width:100%;font-family:var(--display);font-weight:700;font-size:.8rem;cursor:pointer;background:var(--cloud);border:1.5px solid var(--line);color:var(--ink);padding:8px 32px 8px 14px;border-radius:999px;transition:all .15s;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none}
+.seldrop select:focus{border-color:var(--ink)}
+.seldrop::after{content:"▾";position:absolute;right:13px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:.72rem;color:var(--ink-soft)}
 .btn-blue{background:#eaf2fb;color:#2c6cb0;border:1.5px solid #c4dbf2;box-shadow:var(--shadow-sm)}
 .btn-blue:hover{background:#dceafa}
 
@@ -668,15 +675,26 @@ body[data-mood="sad"] .mascot{animation:m-sad .6s ease forwards}
 
     <div class="study-optrow">
       <div class="opts-stack">
-        <div class="opts" id="frontOpts">
-          <button class="chip" data-front="han" aria-pressed="true">汉字 first</button>
-          <button class="chip" data-front="pin" aria-pressed="false">拼音 first</button>
-          <button class="chip" data-front="en" aria-pressed="false">Meaning first</button>
-        </div>
-        <div class="opts" id="scriptOpts">
-          <button class="chip" data-script="simp" aria-pressed="true">简 Simplified</button>
-          <button class="chip" data-script="trad" aria-pressed="false">繁 Traditional</button>
-        </div>
+        <label class="selrow">
+          <span class="sel-lbl">Front</span>
+          <span class="seldrop">
+            <select id="frontSel" aria-label="Card front">
+              <option value="han">Hanzi</option>
+              <option value="hanpin">Hanzi with Pinyin</option>
+              <option value="pin">Pinyin</option>
+              <option value="en">Meaning</option>
+            </select>
+          </span>
+        </label>
+        <label class="selrow">
+          <span class="sel-lbl">Script</span>
+          <span class="seldrop">
+            <select id="scriptSel" aria-label="Character set">
+              <option value="simp">简 Simplified</option>
+              <option value="trad">繁 Traditional</option>
+            </select>
+          </span>
+        </label>
       </div>
       <div class="optrow-div"></div>
       <div class="study-actions">
@@ -1540,10 +1558,11 @@ function renderCard(){
   var stl={"new":"New","learning":"Learning","familiar":"Familiar","mastered":"Mastered"}[st];
   var hard=c&&c.hard;
   function hanCls(s){return s.length>6?" tiny":(s.length>3?" small":"");}
-  var fHTML='<span class="tag">'+(front==="en"?"Meaning":front==="pin"?"Pinyin":"Hanzi")+'</span>'
+  var fHTML='<span class="tag">'+(front==="en"?"Meaning":front==="pin"?"Pinyin":front==="hanpin"?"Hanzi + Pinyin":"Hanzi")+'</span>'
     +'<span class="statustag st-'+st+'">'+stl+'</span>';
   if(front==="han"){var H=displayHan(w);fHTML+='<div class="han'+hanCls(H)+'">'+H+'</div>';}
-  else if(front==="pin"){fHTML+='<div class="han'+(w.p.length>8?" tiny":" small")+'">'+w.p+'</div><div class="sub">'+displayHan(w)+'</div>';}
+  else if(front==="hanpin"){var Hp=displayHan(w);fHTML+='<div class="han'+hanCls(Hp)+'">'+Hp+'</div><div class="sub">'+w.p+'</div>';}
+  else if(front==="pin"){fHTML+='<div class="han'+(w.p.length>8?" tiny":" small")+'">'+w.p+'</div>';}
   else{fHTML+='<div class="en-first">'+meaningLines(w)[0].t+'</div>';}
   fHTML+='<button class="hardstar'+(hard?" on":"")+'" id="hardStar" title="Mark for review" aria-label="Mark for review">★</button>';
   fHTML+='<button class="spk spk-front" id="cardSpkFront" title="Hear pronunciation" aria-label="Hear pronunciation">'+SPK_SVG+'</button>';
@@ -1999,8 +2018,8 @@ function refreshAll(){
   updateChip();renderPanda();syncFrontChips();syncScriptChips();syncLangButtons();renderDatasetBar();renderGroupBar();
   buildStudyPool("reset");renderCard();updateDueCounts();renderBrowse();updateQuizSetupLabels();
 }
-function syncFrontChips(){var f=acct().settings.front;$$("#frontOpts .chip").forEach(function(c){c.setAttribute("aria-pressed",c.getAttribute("data-front")===f);});}
-function syncScriptChips(){var sc=acct().settings.script;$$("#scriptOpts .chip").forEach(function(c){c.setAttribute("aria-pressed",c.getAttribute("data-script")===sc);});}
+function syncFrontChips(){var f=acct().settings.front;var s=$("#frontSel");if(s)s.value=f;}
+function syncScriptChips(){var sc=acct().settings.script;var s=$("#scriptSel");if(s)s.value=sc;}
 function renderDatasetBar(){
   if(!SHOW_COURSE_BAR){var bar=$("#dsBar");if(bar){bar.style.display="none";bar.innerHTML="";}acct().settings.dataset="hsk";return;}
   var cur=acct().settings.dataset;
@@ -2172,8 +2191,8 @@ function init(){
   buildStudyPool("reset");renderCard();updateDueCounts();updateQuizSetupLabels();
   initSwipe();
   // front mode
-  $$("#frontOpts .chip").forEach(function(c){c.onclick=function(){acct().settings.front=c.getAttribute("data-front");saveDB();syncFrontChips();renderCard();};});
-  $$("#scriptOpts .chip").forEach(function(c){c.onclick=function(){acct().settings.script=c.getAttribute("data-script");saveDB();syncScriptChips();renderCard();renderBrowse();};});
+  $("#frontSel").onchange=function(){acct().settings.front=this.value;saveDB();renderCard();};
+  $("#scriptSel").onchange=function(){acct().settings.script=this.value;saveDB();renderCard();renderBrowse();};
   // language toggles (sync across any bars)
   $$(".lang-toggle").forEach(function(b){b.onclick=function(){var k=b.getAttribute("data-lang");var L=langs();L[k]=!L[k];if(!L.en&&!L.th&&!L.ja)L.en=true;saveDB();syncLangButtons();renderCard();renderBrowse();};});
   // study controls
